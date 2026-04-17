@@ -1,0 +1,41 @@
+{
+
+  "target": "cobblemon:giratina",
+  "forms": [
+    {
+      "name": "Mega",
+      "implemented": true,
+      "pokedex": [
+        "cobblemon.species.giratina-mega.desc"
+      ],
+      "abilities": [
+        "shadowtag",
+        "h:shadowtag"
+      ],
+      "labels": [
+        "gen4",
+        "mega"
+      ],
+      "aspects": [
+        "mega"
+      ],
+      "battleOnly": true,
+      "baseStats": {
+        "hp": 150,
+        "attack": 129,
+        "defence": 133,
+        "special_attack": 145,
+        "special_defence": 133,
+        "speed": 90
+      },
+      "baseScale": 0.75,
+      "hitbox": {
+        "width": 1,
+        "height": 3.2,
+        "fixed": false
+      },
+      "height": 75,
+      "weight": 7500
+    }
+  ]
+}

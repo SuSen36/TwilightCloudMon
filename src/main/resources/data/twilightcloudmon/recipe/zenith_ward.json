@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " G ",
+    "GCG",
+    " G "
+  ],
+  "key": {
+    "G": {
+      "item": "cobblemon:fighting_gem"
+    },
+    "C": {
+      "item": "minecraft:iron_chestplate"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "twilightcloudmon:zenith_ward"
+  }
+}

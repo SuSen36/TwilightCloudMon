@@ -1,0 +1,9 @@
+{
+  "entryId": "cobblemon:giratina",
+  "forms": [
+    {
+      "displayForm": "Mega",
+      "unlockForms": ["Mega"]
+    }
+  ]
+}

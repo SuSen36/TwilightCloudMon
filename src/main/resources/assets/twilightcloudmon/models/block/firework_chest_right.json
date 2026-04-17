@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/chest_right",
+  "textures": {
+    "particle": "twilightcloudmon:textures/item/chest",
+    "0": "twilightcloudmon:textures/item/chest"
+  }
+}
+

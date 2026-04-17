@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "IRI",
+    "III"
+  ],
+  "key": {
+    "R": { "tag": "c:dusts/redstone" },
+    "I": { "tag": "c:ingots/iron" }
+  },
+  "result": {
+    "id": "twilightcloudmon:elevator",
+    "count": 1
+  }
+}
+

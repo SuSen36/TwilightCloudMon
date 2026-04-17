@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "twilightcloudmon:firework_sword",
+    "twilightcloudmon:firework_greatsword",
+    "twilightcloudmon:firework_scythe",
+    "twilightcloudmon:firework_axe",
+    "twilightcloudmon:primal_sword",
+    "twilightcloudmon:bonesword"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " #F",
+    "OMO",
+    "PSP"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:ink_sac"
+    },
+    "F": {
+      "item": "minecraft:feather"
+    },
+    "O": {
+      "tag": "minecraft:planks"
+    },
+    "M": {
+      "item": "minecraft:map"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "S": {
+      "item": "minecraft:saddle"
+    }
+  },
+  "result": {
+    "id": "twilightcloudmon:up_paper",
+    "count": 1
+  }
+}

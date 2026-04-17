@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/carpet",
+  "textures": {
+    "particle": "twilightcloudmon:block/movement_plate",
+    "wool": "twilightcloudmon:block/movement_plate"
+  }
+}
+

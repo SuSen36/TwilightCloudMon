@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "twilightcloudmon:firework_sword",
+    "twilightcloudmon:firework_greatsword",
+    "twilightcloudmon:firework_scythe",
+    "twilightcloudmon:firework_trident",
+    "twilightcloudmon:firework_hammer",
+    "twilightcloudmon:firework_axe",
+    "twilightcloudmon:firework_pickaxe",
+    "twilightcloudmon:firework_shovel",
+    "twilightcloudmon:firework_hoe",
+    "twilightcloudmon:firework_bow",
+    "twilightcloudmon:firework_crossbow",
+    "twilightcloudmon:firework_shield",
+    "twilightcloudmon:firework_helmet",
+    "twilightcloudmon:firework_chestplate",
+    "twilightcloudmon:firework_leggings",
+    "twilightcloudmon:firework_boots",
+    "twilightcloudmon:firework_wings",
+    "twilightcloudmon:primal_bow",
+    "twilightcloudmon:primal_sword",
+    "twilightcloudmon:bonesword",
+    "twilightcloudmon:primal_hammer"
+  ]
+}

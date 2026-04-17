@@ -1,0 +1,6 @@
+{
+  "parent": "twilightcloudmon:item/pixelmon_item",
+  "textures": {
+    "layer0": "twilightcloudmon:item/chisel"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "twilightcloudmon:firework_helmet",
+    "twilightcloudmon:firework_chestplate",
+    "twilightcloudmon:firework_leggings",
+    "twilightcloudmon:firework_boots",
+    "twilightcloudmon:firework_wings",
+    "twilightcloudmon:firework_shield"
+  ]
+}

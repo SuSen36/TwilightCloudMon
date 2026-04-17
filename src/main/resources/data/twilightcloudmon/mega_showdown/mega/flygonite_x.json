@@ -1,0 +1,14 @@
+{
+  "showdown_id": "flygonitex",
+  "pokemons": ["Flygon"],
+  "aspect_conditions": {
+    "apply": {
+      "aspects": ["mega_evolution=mega_x"],
+      "effects": ["mega_evolution"]
+    },
+    "revert": {
+      "aspects": ["mega_evolution=none"],
+      "effects": ["mega_evolution"]
+    }
+  }
+}

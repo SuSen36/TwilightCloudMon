@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:cyan_stained_glass"
+    },
+    "G": {
+      "item": "minecraft:glass_bottle"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "   ",
+    "#G#",
+    "D#D"
+  ],
+  "result": {
+    "id": "twilightcloudmon:ghost_bottle",
+    "count": 1
+  }
+}

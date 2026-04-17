@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "twilightcloudmon",
+  "version": "${version}",
+  "name": "TwilightCloudMon",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/twilightcloudmon/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "io.github.yuazer.twilightcloudmon.client.TwilightcloudmonDataGenerator"
+    ],
+    "main": [
+      "io.github.yuazer.twilightcloudmon.Twilightcloudmon"
+    ],
+    "client": [
+      "io.github.yuazer.twilightcloudmon.TwilightcloudmonClient"
+    ]
+  },
+  "mixins": [
+    "twilightcloudmon.mixins.json",
+    {
+      "config": "twilightcloudmon.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-language-kotlin": ">=${kotlin_loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "suggests": {
+    "mega_showdown": "*"
+  }
+}

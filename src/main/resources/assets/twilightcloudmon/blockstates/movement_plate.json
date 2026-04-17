@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "facing=north": { "model": "twilightcloudmon:block/movement_plate" },
+    "facing=south": { "model": "twilightcloudmon:block/movement_plate", "y": 180 },
+    "facing=west": { "model": "twilightcloudmon:block/movement_plate", "y": 270 },
+    "facing=east": { "model": "twilightcloudmon:block/movement_plate", "y": 90 }
+  }
+}
+

@@ -1,0 +1,75 @@
+{
+  "target": "cobblemon:flygon",
+  "forms": [
+    {
+      "name": "Mega X",
+      "implemented": true,
+      "pokedex": [
+        "cobblemon.species.flygon-mega_x.desc"
+      ],
+      "abilities": [
+        "toughclaws",
+        "h:toughclaws"
+      ],
+      "labels": [
+        "gen3",
+        "mega"
+      ],
+      "aspects": [
+        "mega_x"
+      ],
+      "battleOnly": true,
+      "baseStats": {
+        "hp": 80,
+        "attack": 140,
+        "defence": 100,
+        "special_attack": 80,
+        "special_defence": 100,
+        "speed": 120
+      },
+      "baseScale": 1.2,
+      "hitbox": {
+        "width": 1.2,
+        "height": 2.2,
+        "fixed": false
+      },
+      "height": 20,
+      "weight": 820
+    },
+    {
+      "name": "Mega Y",
+      "implemented": true,
+      "pokedex": [
+        "cobblemon.species.flygon-mega_y.desc"
+      ],
+      "abilities": [
+        "levitate",
+        "h:levitate"
+      ],
+      "labels": [
+        "gen3",
+        "mega"
+      ],
+      "aspects": [
+        "mega_y"
+      ],
+      "battleOnly": true,
+      "baseStats": {
+        "hp": 80,
+        "attack": 100,
+        "defence": 80,
+        "special_attack": 140,
+        "special_defence": 100,
+        "speed": 120
+      },
+      "baseScale": 1.2,
+      "hitbox": {
+        "width": 1.2,
+        "height": 2.2,
+        "fixed": false
+      },
+      "height": 20,
+      "weight": 820
+    }
+  ]
+}
