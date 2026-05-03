@@ -1,5 +1,13 @@
-# 项目排除路径
+# Gradle
 /.gradle/
 /build/
-/build/classes/kotlin/client/
-/build/classes/kotlin/main/
+
+# IDE
+/.idea/
+*.iml
+/out/
+/.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

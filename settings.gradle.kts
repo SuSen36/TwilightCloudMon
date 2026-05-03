@@ -1,6 +1,3 @@
- 
- rootProject.name = "TwilightCloudMon"
-
 pluginManagement {
     repositories {
         maven("https://maven.fabricmc.net/") {
@@ -9,3 +6,5 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+rootProject.name = "TwilightCloudMon"
