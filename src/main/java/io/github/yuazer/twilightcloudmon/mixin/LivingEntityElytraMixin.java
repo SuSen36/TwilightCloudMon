@@ -1,6 +1,6 @@
 package io.github.yuazer.twilightcloudmon.mixin;
 
-import io.github.yuazer.twilightcloudmon.registry.ModFireworkWeapons;
+import io.github.yuazer.twilightcloudmon.registry.ModWeapons;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ElytraItem;
@@ -16,7 +16,7 @@ public abstract class LivingEntityElytraMixin {
     private void twilightcloudmon$enableCustomElytra(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         var stack = self.getItemBySlot(EquipmentSlot.CHEST);
-        if (stack.getItem().asItem() == ModFireworkWeapons.INSTANCE.getFIREWORK_WINGS()  && ElytraItem.isFlyEnabled(stack)) {
+        if (stack.getItem().asItem() == ModWeapons.INSTANCE.getFIREWORK_WINGS() && ElytraItem.isFlyEnabled(stack)) {
             cir.setReturnValue(true);
         }
     }

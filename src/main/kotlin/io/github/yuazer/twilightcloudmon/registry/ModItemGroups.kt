@@ -67,27 +67,27 @@ object ModItemGroups {
                 .displayItems { _, output ->
                     val added = DedupOutput(output)
 
-                    added += ModSwords.PRIMAL_SWORD
-                    added += ModBows.PRIMAL_BOW
-                    added += ModHammers.PRIMAL_HAMMER
+                    added += ModWeapons.PRIMAL_SWORD
+                    added += ModWeapons.PRIMAL_BOW
+                    added += ModWeapons.PRIMAL_HAMMER
 
-                    added += ModFireworkWeapons.FIREWORK_SWORD
-                    added += ModFireworkWeapons.FIREWORK_GREATSWORD
-                    added += ModFireworkWeapons.FIREWORK_HAMMER
-                    added += ModFireworkWeapons.FIREWORK_TRIDENT
-                    added += ModFireworkWeapons.FIREWORK_SCYTHE
-                    added += ModFireworkWeapons.FIREWORK_AXE
-                    added += ModFireworkWeapons.FIREWORK_PICKAXE
-                    added += ModFireworkWeapons.FIREWORK_SHOVEL
-                    added += ModFireworkWeapons.FIREWORK_HOE
-                    added += ModFireworkWeapons.FIREWORK_BOW
-                    added += ModFireworkWeapons.FIREWORK_CROSSBOW
-                    added += ModFireworkWeapons.FIREWORK_SHIELD
-                    added += ModFireworkWeapons.FIREWORK_HELMET
-                    added += ModFireworkWeapons.FIREWORK_CHESTPLATE
-                    added += ModFireworkWeapons.FIREWORK_LEGGINGS
-                    added += ModFireworkWeapons.FIREWORK_BOOTS
-                    added += ModFireworkWeapons.FIREWORK_WINGS
+                    added += ModWeapons.FIREWORK_SWORD
+                    added += ModWeapons.FIREWORK_GREATSWORD
+                    added += ModWeapons.FIREWORK_HAMMER
+                    added += ModWeapons.FIREWORK_TRIDENT
+                    added += ModWeapons.FIREWORK_SCYTHE
+                    added += ModWeapons.FIREWORK_AXE
+                    added += ModWeapons.FIREWORK_PICKAXE
+                    added += ModWeapons.FIREWORK_SHOVEL
+                    added += ModWeapons.FIREWORK_HOE
+                    added += ModWeapons.FIREWORK_BOW
+                    added += ModWeapons.FIREWORK_CROSSBOW
+                    added += ModWeapons.FIREWORK_SHIELD
+                    added += ModWeapons.FIREWORK_HELMET
+                    added += ModWeapons.FIREWORK_CHESTPLATE
+                    added += ModWeapons.FIREWORK_LEGGINGS
+                    added += ModWeapons.FIREWORK_BOOTS
+                    added += ModWeapons.FIREWORK_WINGS
 
                     addByTag(TAG_WEAPONS, output)
 

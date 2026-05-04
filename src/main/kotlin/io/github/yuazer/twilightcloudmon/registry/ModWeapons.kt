@@ -1,16 +1,15 @@
 package io.github.yuazer.twilightcloudmon.registry
 
-import io.github.yuazer.twilightcloudmon.Twilightcloudmon
-import io.github.yuazer.twilightcloudmon.item.FireworkBowItem
+import io.github.yuazer.twilightcloudmon.item.ChiselItem
 import io.github.yuazer.twilightcloudmon.item.FireworkTridentItem
+import io.github.yuazer.twilightcloudmon.item.PrimalBowItem
 import io.github.yuazer.twilightcloudmon.registry.RegistryHelper.id
 import net.minecraft.core.Holder
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.item.*
 import net.minecraft.world.item.crafting.Ingredient
 
-object ModFireworkWeapons {
+object ModWeapons {
 
     private const val NETHERITE_DURABILITY = 2031
     private const val ELYTRA_DURABILITY = 432
@@ -24,6 +23,32 @@ object ModFireworkWeapons {
     private fun epicDurable(): Item.Properties =
         epicFireResistant().durability(NETHERITE_DURABILITY)
 
+    val PRIMAL_SWORD: SwordItem = SwordItem(
+        Tiers.NETHERITE,
+        Item.Properties().fireResistant().stacksTo(1)
+            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 3, -2.4F))
+    )
+
+    val PRIMAL_BOW: PrimalBowItem = PrimalBowItem(
+        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(500)
+    )
+
+    val PRIMAL_HAMMER: MaceItem = MaceItem(
+        Item.Properties().rarity(Rarity.EPIC).fireResistant().stacksTo(1)
+            .component(net.minecraft.core.component.DataComponents.TOOL, MaceItem.createToolProperties())
+            .attributes(MaceItem.createAttributes())
+    )
+
+    val BONESWORD: SwordItem = SwordItem(
+        Tiers.NETHERITE,
+        Item.Properties().stacksTo(1)
+            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 2, -2.4F))
+    )
+
+    val CHISEL: ChiselItem = ChiselItem(
+        Item.Properties().rarity(Rarity.RARE).stacksTo(1)
+    )
+
     val FIREWORK_SWORD: SwordItem = SwordItem(
         Tiers.NETHERITE,
         epicFireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 3, -2.4F))
@@ -35,14 +60,11 @@ object ModFireworkWeapons {
     val FIREWORK_HAMMER: MaceItem = MaceItem(
         epicFireResistant().stacksTo(1).durability(NETHERITE_DURABILITY)
     )
-    val FIREWORK_TRIDENT: FireworkTridentItem = FireworkTridentItem(
-        epicDurable()
-    )
+    val FIREWORK_TRIDENT: FireworkTridentItem = FireworkTridentItem(epicDurable())
     val FIREWORK_SCYTHE: SwordItem = SwordItem(
         Tiers.NETHERITE,
         epicFireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4, -2.6F))
     )
-
     val FIREWORK_AXE: AxeItem = AxeItem(
         Tiers.NETHERITE,
         epicFireResistant().attributes(AxeItem.createAttributes(Tiers.NETHERITE, 5.0F, -3.0F))
@@ -59,8 +81,7 @@ object ModFireworkWeapons {
         Tiers.NETHERITE,
         epicFireResistant().attributes(HoeItem.createAttributes(Tiers.NETHERITE, -3.0F, 0.0F))
     )
-
-    val FIREWORK_BOW: FireworkBowItem = FireworkBowItem(epicDurable())
+    val FIREWORK_BOW: BowItem = BowItem(epicDurable())
     val FIREWORK_CROSSBOW: CrossbowItem = CrossbowItem(epicDurable())
     val FIREWORK_SHIELD: ShieldItem = ShieldItem(epicDurable())
 
@@ -85,12 +106,14 @@ object ModFireworkWeapons {
     val FIREWORK_CHESTPLATE: ArmorItem = ArmorItem(armorHolder, ArmorItem.Type.CHESTPLATE, epicDurable())
     val FIREWORK_LEGGINGS: ArmorItem = ArmorItem(armorHolder, ArmorItem.Type.LEGGINGS, epicDurable())
     val FIREWORK_BOOTS: ArmorItem = ArmorItem(armorHolder, ArmorItem.Type.BOOTS, epicDurable())
-
-    val FIREWORK_WINGS: ElytraItem = ElytraItem(
-        epicFireResistant().durability(ELYTRA_DURABILITY)
-    )
+    val FIREWORK_WINGS: ElytraItem = ElytraItem(epicFireResistant().durability(ELYTRA_DURABILITY))
 
     private val ALL_ITEMS = mapOf(
+        "primal_sword" to PRIMAL_SWORD,
+        "primal_bow" to PRIMAL_BOW,
+        "primal_hammer" to PRIMAL_HAMMER,
+        "bonesword" to BONESWORD,
+        "chisel" to CHISEL,
         "firework_sword" to FIREWORK_SWORD,
         "firework_greatsword" to FIREWORK_GREATSWORD,
         "firework_hammer" to FIREWORK_HAMMER,

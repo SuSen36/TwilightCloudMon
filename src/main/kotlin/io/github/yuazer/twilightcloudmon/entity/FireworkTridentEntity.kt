@@ -1,6 +1,6 @@
 package io.github.yuazer.twilightcloudmon.entity
 
-import io.github.yuazer.twilightcloudmon.registry.ModFireworkWeapons
+import io.github.yuazer.twilightcloudmon.registry.ModWeapons
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.ThrownTrident
@@ -12,7 +12,7 @@ class FireworkTridentEntity(
     level: Level
 ) : ThrownTrident(entityType, level) {
 
-    private var weaponItemStack: ItemStack = ItemStack(ModFireworkWeapons.FIREWORK_TRIDENT)
+    private var weaponItemStack: ItemStack = ItemStack(ModWeapons.FIREWORK_TRIDENT)
 
     constructor(
         entityType: EntityType<out FireworkTridentEntity>,

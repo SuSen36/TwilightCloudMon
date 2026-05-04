@@ -33,11 +33,7 @@ class Twilightcloudmon : ModInitializer {
 
         ModBlocks.register()
         ModBlockEntities.register()
-        ModSwords.register()
-        ModBows.register()
-        ModHammers.register()
-        ModTools.register()
-        ModFireworkWeapons.register()
+        ModWeapons.register()
         ModItems.register()
         ModEntities.register()
         ModItemGroups.register()
