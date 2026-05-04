@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.10"
+    kotlin("jvm") version "2.3.10"
     id("fabric-loom") version "1.9-SNAPSHOT"
     id("maven-publish")
 }
@@ -63,6 +63,23 @@ repositories {
             includeGroup("curse.maven")
         }
     }
+
+    maven {
+        name = "Architectury"
+        url = uri("https://maven.architectury.dev/")
+    }
+    maven {
+        name = "Shedaniel"
+        url = uri("https://maven.shedaniel.me/")
+    }
+    maven {
+        name = "Wisp Forest"
+        url = uri("https://maven.wispforest.io/releases")
+    }
+    maven {
+        name = "Su5eD"
+        url = uri("https://maven.su5ed.dev/releases")
+    }
 }
 
 dependencies {
@@ -76,6 +93,9 @@ dependencies {
     modImplementation("com.cobblemon:fabric:1.7.1+1.21.1")
     modCompileOnly("curse.maven:cobblemon-mega-showdown-1189523:7728134")
     modLocalRuntime("curse.maven:cobblemon-mega-showdown-1189523:7728134")
+
+    modLocalRuntime("dev.architectury:architectury-fabric:13.0.8")
+    modLocalRuntime("io.wispforest:accessories-fabric:1.1.0-beta.52+1.21.1")
 }
 
 tasks.processResources {

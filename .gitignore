@@ -1,6 +1,10 @@
-# Gradle
+# Gradle / Kotlin
 /.gradle/
+/.kotlin/
 /build/
+
+# Loom dev runtime
+/run/
 
 # IDE
 /.idea/
