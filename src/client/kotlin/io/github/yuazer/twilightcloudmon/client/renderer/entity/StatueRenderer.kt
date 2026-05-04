@@ -115,7 +115,6 @@ class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<S
         )
         val cached = renderCache[entity.id]
         if (cached != null && cached.signature == signature) {
-            // 如果动画未启用，不更新age（保持静止）
             if (entity.isAnimated) {
                 cached.state.updateAge(entity.tickCount)
             }
@@ -168,10 +167,8 @@ class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<S
         
         val speciesRegistry = PokemonSpecies
         
-        // 首先尝试使用增强的 getByName API，它支持命名空间标识符
         speciesRegistry.getByName(trimmed)?.let { return it }
-        
-        // 如果直接查找失败，尝试作为资源位置解析
+
         return try {
             speciesRegistry.getByIdentifier(ResourceLocation.parse(trimmed))
         } catch (_: Exception) {
@@ -223,16 +220,12 @@ class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<S
         return poser.poses.keys.firstOrNull { it == "idle" } ?: poser.poses.keys.firstOrNull() ?: "idle"
     }
 
-    /**
-     * 轻量 PosableState，模仿 PokemonRenderer 里对 partialTicks / age 的传递。
-     */
     private class StatuePosableState(
         private val statue: StatueEntity,
         partialTicks: Float,
         override val schedulingTracker: SchedulingTracker
     ) : PosableState() {
         init {
-            // 如果动画未启用，age设为0，否则使用tickCount
             updateAge(if (statue.isAnimated) statue.tickCount else 0)
             updatePartialTicks(if (statue.isStatic) 0f else partialTicks)
         }
@@ -254,11 +247,7 @@ class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<S
         }
 
         fun animationTicks(entity: StatueEntity): Float {
-            // 如果动画未启用，播放速度为0（返回固定值0）
-            if (!entity.isAnimated) {
-                return 0f
-            }
-            // 如果启用动画，根据isStatic决定使用固定帧还是tick计数
+            if (!entity.isAnimated) return 0f
             val baseAge = if (entity.isStatic) 0f else entity.tickCount.toFloat()
             return baseAge + currentPartialTicks
         }

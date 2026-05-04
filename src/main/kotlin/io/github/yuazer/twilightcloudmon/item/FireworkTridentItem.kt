@@ -2,9 +2,7 @@ package io.github.yuazer.twilightcloudmon.item
 
 import io.github.yuazer.twilightcloudmon.entity.FireworkTridentEntity
 import io.github.yuazer.twilightcloudmon.registry.ModEntities
-import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
@@ -19,6 +17,13 @@ import net.minecraft.world.level.Level
 
 class FireworkTridentItem(properties: Properties) : TridentItem(properties) {
 
+    companion object {
+        private const val MIN_CHARGE_TICKS = 10
+        private const val BASE_VELOCITY = 2.5f
+        private const val RIPTIDE_VELOCITY_BONUS = 0.5f
+        private const val INACCURACY = 1.0f
+    }
+
     override fun releaseUsing(stack: ItemStack, level: Level, user: LivingEntity, timeLeft: Int) {
         if (user !is Player) {
             super.releaseUsing(stack, level, user, timeLeft)
@@ -26,7 +31,7 @@ class FireworkTridentItem(properties: Properties) : TridentItem(properties) {
         }
 
         val charge = getUseDuration(stack, user) - timeLeft
-        if (charge < 10) return
+        if (charge < MIN_CHARGE_TICKS) return
 
         val riptide = EnchantmentHelper.getItemEnchantmentLevel(
             level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.RIPTIDE),
@@ -42,12 +47,9 @@ class FireworkTridentItem(properties: Properties) : TridentItem(properties) {
 
             val tridentEntity = FireworkTridentEntity(ModEntities.FIREWORK_TRIDENT, level, user, stack)
             tridentEntity.shootFromRotation(
-                user,
-                user.xRot,
-                user.yRot,
-                0.0f,
-                2.5f + riptide.toFloat() * 0.5f,
-                1.0f
+                user, user.xRot, user.yRot, 0.0f,
+                BASE_VELOCITY + riptide.toFloat() * RIPTIDE_VELOCITY_BONUS,
+                INACCURACY
             )
 
             if (user.abilities.instabuild) {
@@ -55,14 +57,10 @@ class FireworkTridentItem(properties: Properties) : TridentItem(properties) {
             }
 
             level.addFreshEntity(tridentEntity)
-
-            val throwSound: SoundEvent = when (val v = SoundEvents.TRIDENT_THROW as Any) {
-                is SoundEvent -> v
-                is Holder<*> -> v.value() as SoundEvent
-                else -> SoundEvents.TRIDENT_THROW as SoundEvent
-            }
-
-            level.playSound(null, tridentEntity.x, tridentEntity.y, tridentEntity.z, throwSound, SoundSource.PLAYERS)
+            level.playSound(
+                null, tridentEntity.x, tridentEntity.y, tridentEntity.z,
+                SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS
+            )
 
             if (!user.abilities.instabuild) {
                 user.inventory.removeItem(stack)

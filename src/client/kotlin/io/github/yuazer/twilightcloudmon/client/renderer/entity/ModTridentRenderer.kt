@@ -49,7 +49,6 @@ class ModTridentRenderer(context: EntityRendererProvider.Context) : EntityRender
         val pitch = Mth.lerp(partialTicks, entity.xRotO, entity.xRot)
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw))
         poseStack.mulPose(Axis.XP.rotationDegrees(pitch))
-        //poseStack.mulPose(Axis.XP.rotationDegrees(180.0f))
 
         val shakeTime = entity.shakeTime.toFloat() - partialTicks
         if (shakeTime > 0.0f) {

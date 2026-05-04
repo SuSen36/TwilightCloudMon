@@ -3,152 +3,114 @@ package io.github.yuazer.twilightcloudmon.registry
 import io.github.yuazer.twilightcloudmon.Twilightcloudmon
 import io.github.yuazer.twilightcloudmon.item.FireworkBowItem
 import io.github.yuazer.twilightcloudmon.item.FireworkTridentItem
+import io.github.yuazer.twilightcloudmon.registry.RegistryHelper.id
 import net.minecraft.core.Holder
-import net.minecraft.core.Registry
-import net.minecraft.core.component.DataComponents
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.item.*
 import net.minecraft.world.item.crafting.Ingredient
 
 object ModFireworkWeapons {
-    private val registered = mutableListOf<ResourceLocation>()
 
-    // 武器
-    val FIREWORK_SWORD = SwordItem(
+    private const val NETHERITE_DURABILITY = 2031
+    private const val ELYTRA_DURABILITY = 432
+    private const val ENCHANTMENT_VALUE = 20
+    private const val TOUGHNESS = 3.0f
+    private const val KNOCKBACK_RESISTANCE = 0.1f
+
+    private fun epicFireResistant(): Item.Properties =
+        Item.Properties().rarity(Rarity.EPIC).fireResistant()
+
+    private fun epicDurable(): Item.Properties =
+        epicFireResistant().durability(NETHERITE_DURABILITY)
+
+    val FIREWORK_SWORD: SwordItem = SwordItem(
         Tiers.NETHERITE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 3, -2.4F))
+        epicFireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 3, -2.4F))
     )
-
-    val FIREWORK_GREATSWORD = SwordItem(
+    val FIREWORK_GREATSWORD: SwordItem = SwordItem(
         Tiers.NETHERITE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 5, -3.0F))
+        epicFireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 5, -3.0F))
     )
-
-    val FIREWORK_HAMMER = MaceItem(
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().stacksTo(1).durability(2031) // 下界合金耐久度.component(net.minecraft.core.component.DataComponents.TOOL, MaceItem.createToolProperties()).attributes(MaceItem.createAttributes())
+    val FIREWORK_HAMMER: MaceItem = MaceItem(
+        epicFireResistant().stacksTo(1).durability(NETHERITE_DURABILITY)
     )
-
-    val FIREWORK_TRIDENT = FireworkTridentItem(
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度.attributes(TridentItem.createAttributes())
+    val FIREWORK_TRIDENT: FireworkTridentItem = FireworkTridentItem(
+        epicDurable()
     )
-
-    val FIREWORK_SCYTHE = SwordItem(
+    val FIREWORK_SCYTHE: SwordItem = SwordItem(
         Tiers.NETHERITE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4, -2.6F))
+        epicFireResistant().attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4, -2.6F))
     )
 
-    // 工具
-    val FIREWORK_AXE = AxeItem(
+    val FIREWORK_AXE: AxeItem = AxeItem(
         Tiers.NETHERITE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().attributes(AxeItem.createAttributes(Tiers.NETHERITE, 5.0F, -3.0F))
+        epicFireResistant().attributes(AxeItem.createAttributes(Tiers.NETHERITE, 5.0F, -3.0F))
     )
-
-    val FIREWORK_PICKAXE = PickaxeItem(
+    val FIREWORK_PICKAXE: PickaxeItem = PickaxeItem(
         Tiers.NETHERITE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().attributes(PickaxeItem.createAttributes(Tiers.NETHERITE, 1.0F, -2.8F))
+        epicFireResistant().attributes(PickaxeItem.createAttributes(Tiers.NETHERITE, 1.0F, -2.8F))
     )
-
-    val FIREWORK_SHOVEL = ShovelItem(
+    val FIREWORK_SHOVEL: ShovelItem = ShovelItem(
         Tiers.NETHERITE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().attributes(ShovelItem.createAttributes(Tiers.NETHERITE, 1.5F, -3.0F))
+        epicFireResistant().attributes(ShovelItem.createAttributes(Tiers.NETHERITE, 1.5F, -3.0F))
     )
-
-    val FIREWORK_HOE = HoeItem(
+    val FIREWORK_HOE: HoeItem = HoeItem(
         Tiers.NETHERITE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().attributes(HoeItem.createAttributes(Tiers.NETHERITE, -3.0F, 0.0F))
+        epicFireResistant().attributes(HoeItem.createAttributes(Tiers.NETHERITE, -3.0F, 0.0F))
     )
 
-    // 远程武器
-    val FIREWORK_BOW = FireworkBowItem(
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度
-    )
+    val FIREWORK_BOW: FireworkBowItem = FireworkBowItem(epicDurable())
+    val FIREWORK_CROSSBOW: CrossbowItem = CrossbowItem(epicDurable())
+    val FIREWORK_SHIELD: ShieldItem = ShieldItem(epicDurable())
 
-    val FIREWORK_CROSSBOW = CrossbowItem(
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度
-    )
-
-    // 防御
-    val FIREWORK_SHIELD = ShieldItem(
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度
-    )
-
-    // 盔甲材质
     private val FIREWORK_ARMOR_MATERIAL = ArmorMaterial(
-        mapOf(ArmorItem.Type.BOOTS to 3,ArmorItem.Type.LEGGINGS to 6,ArmorItem.Type.CHESTPLATE to 8,ArmorItem.Type.HELMET to 3
+        mapOf(
+            ArmorItem.Type.BOOTS to 3,
+            ArmorItem.Type.LEGGINGS to 6,
+            ArmorItem.Type.CHESTPLATE to 8,
+            ArmorItem.Type.HELMET to 3
         ),
-        20, // 附魔值
+        ENCHANTMENT_VALUE,
         SoundEvents.ARMOR_EQUIP_NETHERITE,
-        { Ingredient.EMPTY }, // 修复材料
-        listOf(ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(Twilightcloudmon.MOD_ID, "firework_armor"))),
-        3.0f, // 韧性
-        0.1f  // 击退抗性
+        { Ingredient.EMPTY },
+        listOf(ArmorMaterial.Layer(id("firework_armor"))),
+        TOUGHNESS,
+        KNOCKBACK_RESISTANCE
     )
 
-    // 盔甲套装
-    val FIREWORK_HELMET = ArmorItem(
-        Holder.direct(FIREWORK_ARMOR_MATERIAL),
-        ArmorItem.Type.HELMET,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度
+    private val armorHolder = Holder.direct(FIREWORK_ARMOR_MATERIAL)
+
+    val FIREWORK_HELMET: ArmorItem = ArmorItem(armorHolder, ArmorItem.Type.HELMET, epicDurable())
+    val FIREWORK_CHESTPLATE: ArmorItem = ArmorItem(armorHolder, ArmorItem.Type.CHESTPLATE, epicDurable())
+    val FIREWORK_LEGGINGS: ArmorItem = ArmorItem(armorHolder, ArmorItem.Type.LEGGINGS, epicDurable())
+    val FIREWORK_BOOTS: ArmorItem = ArmorItem(armorHolder, ArmorItem.Type.BOOTS, epicDurable())
+
+    val FIREWORK_WINGS: ElytraItem = ElytraItem(
+        epicFireResistant().durability(ELYTRA_DURABILITY)
     )
 
-    val FIREWORK_CHESTPLATE = ArmorItem(
-        Holder.direct(FIREWORK_ARMOR_MATERIAL),
-        ArmorItem.Type.CHESTPLATE,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度
-    )
-
-    val FIREWORK_LEGGINGS = ArmorItem(
-        Holder.direct(FIREWORK_ARMOR_MATERIAL),
-        ArmorItem.Type.LEGGINGS,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度
-    )
-
-    val FIREWORK_BOOTS = ArmorItem(
-        Holder.direct(FIREWORK_ARMOR_MATERIAL),
-        ArmorItem.Type.BOOTS,
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(2031) // 下界合金耐久度
-    )
-
-    val FIREWORK_WINGS = ElytraItem(
-        Item.Properties().rarity(Rarity.EPIC).fireResistant().durability(432)
+    private val ALL_ITEMS = mapOf(
+        "firework_sword" to FIREWORK_SWORD,
+        "firework_greatsword" to FIREWORK_GREATSWORD,
+        "firework_hammer" to FIREWORK_HAMMER,
+        "firework_trident" to FIREWORK_TRIDENT,
+        "firework_scythe" to FIREWORK_SCYTHE,
+        "firework_axe" to FIREWORK_AXE,
+        "firework_pickaxe" to FIREWORK_PICKAXE,
+        "firework_shovel" to FIREWORK_SHOVEL,
+        "firework_hoe" to FIREWORK_HOE,
+        "firework_bow" to FIREWORK_BOW,
+        "firework_crossbow" to FIREWORK_CROSSBOW,
+        "firework_shield" to FIREWORK_SHIELD,
+        "firework_helmet" to FIREWORK_HELMET,
+        "firework_chestplate" to FIREWORK_CHESTPLATE,
+        "firework_leggings" to FIREWORK_LEGGINGS,
+        "firework_boots" to FIREWORK_BOOTS,
+        "firework_wings" to FIREWORK_WINGS
     )
 
     fun register() {
-        // 注册武器
-        registerItem("firework_sword", FIREWORK_SWORD)
-        registerItem("firework_greatsword", FIREWORK_GREATSWORD)
-        registerItem("firework_hammer", FIREWORK_HAMMER)
-        registerItem("firework_trident", FIREWORK_TRIDENT)
-        registerItem("firework_scythe", FIREWORK_SCYTHE)
-
-        // 注册工具
-        registerItem("firework_axe", FIREWORK_AXE)
-        registerItem("firework_pickaxe", FIREWORK_PICKAXE)
-        registerItem("firework_shovel", FIREWORK_SHOVEL)
-        registerItem("firework_hoe", FIREWORK_HOE)
-
-        // 注册远程武器
-        registerItem("firework_bow", FIREWORK_BOW)
-        registerItem("firework_crossbow", FIREWORK_CROSSBOW)
-
-        // 注册防御
-        registerItem("firework_shield", FIREWORK_SHIELD)
-
-        // 注册盔甲
-        registerItem("firework_helmet", FIREWORK_HELMET)
-        registerItem("firework_chestplate", FIREWORK_CHESTPLATE)
-        registerItem("firework_leggings", FIREWORK_LEGGINGS)
-        registerItem("firework_boots", FIREWORK_BOOTS)
-        registerItem("firework_wings", FIREWORK_WINGS)
-    }
-
-    private fun registerItem(name: String, item: Item) {
-        val id = ResourceLocation.fromNamespaceAndPath(Twilightcloudmon.MOD_ID, name)
-        Registry.register(BuiltInRegistries.ITEM, id, item)
-        registered += id
+        ALL_ITEMS.forEach { (name, item) -> RegistryHelper.registerItem(name, item) }
     }
 }
-

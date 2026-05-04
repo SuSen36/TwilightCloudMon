@@ -57,7 +57,6 @@ class ChiselScreen(
     override fun init() {
         super.init()
 
-        // 获取雕塑实体
         val level = minecraft?.level
         if (level != null) {
             val entity = level.getEntity(statueId)
@@ -78,25 +77,21 @@ class ChiselScreen(
         val left = width / 2 - 200
         val top = height / 2 - 100
 
-        // 宝可梦名称输入框
         pokemonNameField = EditBox(font, left + 10, top + 20, 180, 20, Component.literal("宝可梦名称"))
         pokemonNameField.setMaxLength(64)
         pokemonNameField.value = statue?.pokemonName ?: "pikachu"
         addRenderableWidget(pokemonNameField)
 
-        // 文本输入框
         textField = EditBox(font, left + 10, top + 50, 180, 20, Component.literal("显示文本"))
         textField.setMaxLength(64)
         textField.value = statue?.text ?: ""
         addRenderableWidget(textField)
 
-        // 动画输入框
         animationField = EditBox(font, left + 10, top + 80, 180, 20, Component.literal("动画"))
         animationField.setMaxLength(64)
         animationField.value = statue?.animation ?: "idle"
         addRenderableWidget(animationField)
 
-        // 启用动画按钮
         animatedButton = Button.builder(
             Component.literal("启用动画: ${if (isAnimated) "是" else "否"}"),
             {
@@ -106,42 +101,36 @@ class ChiselScreen(
         ).bounds(left + 10, top + 110, 180, 20).build()
         addRenderableWidget(animatedButton)
 
-        // 大小按钮
         sizeButton = Button.builder(
             Component.literal("大小: $currentSize"),
             { cycleSize() }
         ).bounds(left + 10, top + 140, 180, 20).build()
         addRenderableWidget(sizeButton)
 
-        // 材质按钮
         materialButton = Button.builder(
             Component.literal("材质: $currentMaterial"),
             { cycleMaterial() }
         ).bounds(left + 10, top + 170, 180, 20).build()
         addRenderableWidget(materialButton)
 
-        // 形态按钮
         formButton = Button.builder(
             Component.literal("形态: $currentForm"),
             { cycleForm() }
         ).bounds(left + 10, top + 200, 180, 20).build()
         addRenderableWidget(formButton)
 
-        // 附加材质按钮
         extraMaterialButton = Button.builder(
             Component.literal("附加材质: $currentExtraMaterial"),
             { cycleExtraMaterial() }
         ).bounds(left + 10, top + 230, 180, 20).build()
         addRenderableWidget(extraMaterialButton)
 
-        // 碰撞类型按钮
         collisionButton = Button.builder(
             Component.literal("碰撞: $currentCollision"),
             { cycleCollision() }
         ).bounds(left + 10, top + 260, 180, 20).build()
         addRenderableWidget(collisionButton)
 
-        // 可移动按钮
         movableButton = Button.builder(
             Component.literal("可移动: ${if (isMovable) "是" else "否"}"),
             {
@@ -151,14 +140,12 @@ class ChiselScreen(
         ).bounds(left + 10, top + 290, 180, 20).build()
         addRenderableWidget(movableButton)
 
-        // 性别按钮
         genderButton = Button.builder(
             Component.literal("性别: $currentGender"),
             { cycleGender() }
         ).bounds(left + 10, top + 320, 180, 20).build()
         addRenderableWidget(genderButton)
 
-        // 静止/运动按钮
         staticButton = Button.builder(
             Component.literal("状态: ${if (isStatic) "静止" else "运动"}"),
             {
@@ -168,7 +155,6 @@ class ChiselScreen(
         ).bounds(left + 10, top + 350, 180, 20).build()
         addRenderableWidget(staticButton)
 
-        // 保存按钮
         saveButton = Button.builder(
             Component.translatable("gui.twilightcloudmon.chisel.save"),
             { saveAndClose() }
@@ -189,7 +175,6 @@ class ChiselScreen(
     }
 
     private fun cycleForm() {
-        // 形态需要根据宝可梦动态获取，这里简化处理
         currentForm = if (currentForm == "default") "mega" else "default"
         formButton.message = Component.literal("形态: $currentForm")
     }
@@ -213,7 +198,6 @@ class ChiselScreen(
     }
 
     private fun saveAndClose() {
-        // 发包到服务器更新雕塑数据
         ClientPlayNetworking.send(
             ChiselGuiPacket.UpdateStatuePayload(
                 statueId = statueId,
@@ -232,7 +216,6 @@ class ChiselScreen(
             )
         )
 
-        // 客户端本地也先同步一次，避免关闭界面前闪烁
         statue?.let { s ->
             s.pokemonName = pokemonNameField.value
             s.text = textField.value
@@ -259,7 +242,6 @@ class ChiselScreen(
         val guiWidth = 400
         val guiHeight = 420
 
-        // 绘制 GUI 背景
         graphics.blit(
             TEXTURE,
             left, top,
@@ -270,14 +252,12 @@ class ChiselScreen(
 
         super.render(graphics, mouseX, mouseY, delta)
 
-        // 绘制标题
         graphics.drawString(font, title, left + 10, top + 5, 0xFFFFFF, false)
     }
 
     override fun isPauseScreen(): Boolean = false
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        // 按下回车即视为确认保存
         if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
             saveAndClose()
             return true

@@ -40,7 +40,6 @@ class StatueEntity(
         }
     }
 
-    // Properties mapping to SynchedEntityData
     var pokemonName: String get() = entityData.get(DATA_POKEMON_NAME); set(v) = entityData.set(DATA_POKEMON_NAME, v)
     var size: String get() = entityData.get(DATA_SIZE); set(v) = entityData.set(DATA_SIZE, v)
     var animation: String get() = entityData.get(DATA_ANIMATION); set(v) = entityData.set(DATA_ANIMATION, v)
@@ -72,7 +71,6 @@ class StatueEntity(
 
     override fun move(moverType: MoverType, movement: Vec3) {
         if (isStatic) return
-        // Only allow movement if specifically flagged as movable OR if it's internal physics (gravity/velocity)
         if (!movable && moverType != MoverType.SELF) return
 
         super.move(moverType, movement)
@@ -85,7 +83,6 @@ class StatueEntity(
         }
     }
 
-    // Required LivingEntity overrides
     override fun getMainArm(): HumanoidArm = HumanoidArm.RIGHT
     override fun getArmorSlots(): MutableIterable<ItemStack> = Collections.emptyList()
     override fun getItemBySlot(slot: EquipmentSlot): ItemStack = ItemStack.EMPTY
@@ -123,7 +120,7 @@ class StatueEntity(
         isStatic = tag.getBoolean("isStatic")
     }
 
-    override fun isPickable(): Boolean = true // Usually want to be able to click statues
+    override fun isPickable(): Boolean = true
     override fun isPushable(): Boolean = movable && !isStatic
 
     override fun getDisplayName(): Component {

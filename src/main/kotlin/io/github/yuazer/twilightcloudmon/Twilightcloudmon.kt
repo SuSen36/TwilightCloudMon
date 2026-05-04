@@ -1,6 +1,7 @@
 package io.github.yuazer.twilightcloudmon
 
 import io.github.yuazer.twilightcloudmon.command.WarpPlateCommand
+import io.github.yuazer.twilightcloudmon.entity.StatueEntity
 import io.github.yuazer.twilightcloudmon.event.ChiselEvents
 import io.github.yuazer.twilightcloudmon.event.ElevatorEvents
 import io.github.yuazer.twilightcloudmon.network.ChiselGuiPacket
@@ -13,19 +14,23 @@ import org.slf4j.LoggerFactory
 import java.io.File
 
 class Twilightcloudmon : ModInitializer {
-   companion object{
-       const val MOD_ID = "twilightcloudmon"
-       private val LOGGER = LoggerFactory.getLogger(MOD_ID)
-       val SHOWDOWN_FOLDER = FabricLoader.getInstance().gameDir.resolve("showdown/data/mods/cobblemon").toString()
-       val SHOWDOWN_FILES: List<String> = listOf(
-           "moves.js",
-           "abilities.js",
-           "items.js"
-       )
-   }
+
+    companion object {
+        const val MOD_ID = "twilightcloudmon"
+        private val LOGGER = LoggerFactory.getLogger(MOD_ID)
+
+        private const val SHOWDOWN_RELATIVE_PATH = "showdown/data/mods/cobblemon"
+        private const val RESOURCE_BASE = "/io/github/yuazer/twilightcloudmon/"
+
+        val SHOWDOWN_FOLDER: String =
+            FabricLoader.getInstance().gameDir.resolve(SHOWDOWN_RELATIVE_PATH).toString()
+
+        private val SHOWDOWN_FILES = listOf("moves.js", "abilities.js", "items.js")
+    }
 
     override fun onInitialize() {
-        LOGGER.info("Initializing Twilightcloudmon")
+        LOGGER.info("Initializing $MOD_ID")
+
         ModBlocks.register()
         ModBlockEntities.register()
         ModSwords.register()
@@ -37,34 +42,29 @@ class Twilightcloudmon : ModInitializer {
         ModEntities.register()
         ModItemGroups.register()
 
-        // 注册实体属性
-        FabricDefaultAttributeRegistry.register(ModEntities.STATUE, io.github.yuazer.twilightcloudmon.entity.StatueEntity.createAttributes())
+        FabricDefaultAttributeRegistry.register(ModEntities.STATUE, StatueEntity.createAttributes())
 
         CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
             WarpPlateCommand.register(dispatcher)
         }
-        
-        // 注册升降方块事件
+
         ElevatorEvents.register()
-        
-        // 注册雕塑工具事件
         ChiselEvents.register()
-        
-        // 注册网络包
         ChiselGuiPacket.register()
-        
+
+        deployShowdownFiles()
+
+        LOGGER.info("$MOD_ID initialized")
+    }
+
+    private fun deployShowdownFiles() {
         File(SHOWDOWN_FOLDER).mkdirs()
-
         for (fileName in SHOWDOWN_FILES) {
-            val resourceStream = javaClass.getResourceAsStream("/io/github/yuazer/twilightcloudmon/$fileName")
+            val resourceStream = javaClass.getResourceAsStream("$RESOURCE_BASE$fileName")
                 ?: throw RuntimeException("Could not find $fileName")
-
             File("$SHOWDOWN_FOLDER/$fileName").outputStream().use { output ->
-                resourceStream.use { input ->
-                    input.copyTo(output)
-                }
+                resourceStream.use { it.copyTo(output) }
             }
         }
-        LOGGER.info("Twilightcloudmon initialized")
     }
 }

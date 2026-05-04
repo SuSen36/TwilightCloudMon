@@ -3,9 +3,6 @@ package io.github.yuazer.twilightcloudmon.security
 import java.io.StringReader
 import java.util.PriorityQueue
 
-/**
- * 霍夫曼编码加密/解密工具（带嵌入式树）
- */
 class HuffmanCodingWithEmbeddedTree {
     private var huffmanCodes: MutableMap<Char, String>? = null
     private var root: HuffmanNode? = null
@@ -87,12 +84,9 @@ class HuffmanCodingWithEmbeddedTree {
         }
     }
 
-    private fun escapeCharacter(c: Char): String {
-        // 对特殊字符进行转义处理
-        return when (c) {
-            '\\', ',' -> "\\$c"
-            else -> c.toString()
-        }
+    private fun escapeCharacter(c: Char): String = when (c) {
+        '\\', ',' -> "\\$c"
+        else -> c.toString()
     }
 
     private fun deserializeTreeFromString(reader: StringReader): HuffmanNode? {
@@ -104,9 +98,7 @@ class HuffmanCodingWithEmbeddedTree {
             return null
         }
 
-        // 对于叶子节点和分支节点，顺序不同
         if (type == 'L') {
-            // 1. 先读取字符数据（处理转义）
             val charBuilder = StringBuilder()
             var escape = false
             var charC: Int
@@ -125,17 +117,14 @@ class HuffmanCodingWithEmbeddedTree {
             }
             val data = if (charBuilder.isNotEmpty()) charBuilder[0] else 0.toChar()
 
-            // 2. 然后读取频率
             val numBuilder = StringBuilder()
             while (reader.read().also { charC = it } != -1 && charC.toChar() != ',') {
                 numBuilder.append(charC.toChar())
             }
-
             val frequency = numBuilder.toString().toInt()
 
             return HuffmanNode(data, frequency)
         } else if (type == 'B') {
-            // 分支节点：先读取频率
             val numBuilder = StringBuilder()
             var charC: Int
             while (reader.read().also { charC = it } != -1 && charC.toChar() != ',') {
@@ -143,7 +132,6 @@ class HuffmanCodingWithEmbeddedTree {
             }
             val frequency = numBuilder.toString().toInt()
 
-            // 递归读取左右子树
             val left = deserializeTreeFromString(reader)
             val right = deserializeTreeFromString(reader)
             return HuffmanNode(frequency, left, right)
@@ -210,9 +198,6 @@ class HuffmanCodingWithEmbeddedTree {
         return decodedText.toString()
     }
 
-    /**
-     * 哈夫曼树节点
-     */
     data class HuffmanNode(
         val data: Char?,
         val frequency: Int,

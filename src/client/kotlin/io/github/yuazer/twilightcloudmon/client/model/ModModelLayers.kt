@@ -1,32 +1,18 @@
 package io.github.yuazer.twilightcloudmon.client.model
 
-import io.github.yuazer.twilightcloudmon.Twilightcloudmon
+import io.github.yuazer.twilightcloudmon.registry.RegistryHelper.id
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.model.geom.ModelLayerLocation
-import net.minecraft.resources.ResourceLocation
 
 @Environment(EnvType.CLIENT)
 object ModModelLayers {
-    val PRIMAL_ARROW = ModelLayerLocation(
-        ResourceLocation.fromNamespaceAndPath(Twilightcloudmon.MOD_ID, "primal_arrow"),
-        "main"
-    )
-    val STATUE = ModelLayerLocation(
-        ResourceLocation.fromNamespaceAndPath(Twilightcloudmon.MOD_ID, "statue"),
-        "main"
-    )
 
-    val FIREWORK_CHEST = ModelLayerLocation(
-        ResourceLocation.fromNamespaceAndPath(Twilightcloudmon.MOD_ID, "firework_chest"),
-        "main"
-    )
-    val FIREWORK_CHEST_LEFT = ModelLayerLocation(
-        ResourceLocation.fromNamespaceAndPath(Twilightcloudmon.MOD_ID, "firework_chest_left"),
-        "main"
-    )
-    val FIREWORK_CHEST_RIGHT = ModelLayerLocation(
-        ResourceLocation.fromNamespaceAndPath(Twilightcloudmon.MOD_ID, "firework_chest_right"),
-        "main"
-    )
+    private fun layer(name: String) = ModelLayerLocation(id(name), "main")
+
+    val PRIMAL_ARROW = layer("primal_arrow")
+    val STATUE = layer("statue")
+    val FIREWORK_CHEST = layer("firework_chest")
+    val FIREWORK_CHEST_LEFT = layer("firework_chest_left")
+    val FIREWORK_CHEST_RIGHT = layer("firework_chest_right")
 }

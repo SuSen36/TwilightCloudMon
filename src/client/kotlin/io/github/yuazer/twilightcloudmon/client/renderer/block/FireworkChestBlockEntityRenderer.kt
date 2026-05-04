@@ -5,10 +5,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import io.github.yuazer.twilightcloudmon.block.entity.FireworkChestBlockEntity
 import io.github.yuazer.twilightcloudmon.client.model.ModModelLayers
-import it.unimi.dsi.fastutil.ints.Int2IntFunction
+import io.github.yuazer.twilightcloudmon.registry.RegistryHelper.id
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.client.model.geom.ModelLayers
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.geom.PartPose
 import net.minecraft.client.model.geom.builders.CubeListBuilder
@@ -20,12 +19,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BrightnessCombiner
 import net.minecraft.core.Direction
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.AbstractChestBlock
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.ChestBlock
 import net.minecraft.world.level.block.DoubleBlockCombiner
-import net.minecraft.world.level.block.entity.LidBlockEntity
 import net.minecraft.world.level.block.state.properties.ChestType
 
 @Environment(EnvType.CLIENT)
@@ -42,9 +39,7 @@ class FireworkChestBlockEntityRenderer(context: BlockEntityRendererProvider.Cont
     private val doubleRightBottom: ModelPart
     private val doubleRightLock: ModelPart
 
-
     init {
-        // 使用自定义的烟花箱子模型层，而不是原版箱子模型层
         val modelPart = context.bakeLayer(ModModelLayers.FIREWORK_CHEST)
         bottom = modelPart.getChild("bottom")
         lid = modelPart.getChild("lid")
@@ -109,7 +104,6 @@ class FireworkChestBlockEntityRenderer(context: BlockEntityRendererProvider.Cont
 
             val brightness = neighborCombineResult.apply(BrightnessCombiner()).applyAsInt(packedLight)
             
-            // 不使用 Sheets.CHEST_SHEET 图集（会导致自定义贴图未被 stitch 时变紫黑）
             val texture = when (chestType) {
                 ChestType.LEFT -> LEFT_CHEST_TEXTURE
                 ChestType.RIGHT -> RIGHT_CHEST_TEXTURE
@@ -149,12 +143,10 @@ class FireworkChestBlockEntityRenderer(context: BlockEntityRendererProvider.Cont
     }
 
     companion object {
-        private val SINGLE_CHEST_TEXTURE = ResourceLocation.fromNamespaceAndPath("twilightcloudmon", "textures/entity/chest/firework_chest.png")
-        private val LEFT_CHEST_TEXTURE = ResourceLocation.fromNamespaceAndPath("twilightcloudmon", "textures/entity/chest/firework_chest_left.png")
-        private val RIGHT_CHEST_TEXTURE = ResourceLocation.fromNamespaceAndPath("twilightcloudmon", "textures/entity/chest/firework_chest_right.png")
-        
-        // 将 Blockbench 导出的 firework_chest 模型转换为 LayerDefinition。
-        // 注意：这里的几何在 bottom 部分，lid/lock 为空，盖子开合动画将不会影响模型。
+        private val SINGLE_CHEST_TEXTURE = id("textures/entity/chest/firework_chest.png")
+        private val LEFT_CHEST_TEXTURE = id("textures/entity/chest/firework_chest_left.png")
+        private val RIGHT_CHEST_TEXTURE = id("textures/entity/chest/firework_chest_right.png")
+
         private fun createModelLayer(): LayerDefinition {
             val mesh = MeshDefinition()
             val root = mesh.root
@@ -214,7 +206,6 @@ class FireworkChestBlockEntityRenderer(context: BlockEntityRendererProvider.Cont
                 PartPose.offsetAndRotation(-3.5f, -9.0f, 8.0f, 0.0f, 0.0f, 0.3927f)
             )
 
-            // lid/lock 保留空壳，避免渲染器崩溃；动画不会影响模型。
             root.addOrReplaceChild("lid", CubeListBuilder.create(), PartPose.ZERO)
             root.addOrReplaceChild("lock", CubeListBuilder.create(), PartPose.ZERO)
 

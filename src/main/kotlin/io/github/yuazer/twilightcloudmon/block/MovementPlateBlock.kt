@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.DirectionProperty
+import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -49,26 +50,30 @@ class MovementPlateBlock(properties: Properties) : Block(properties) {
         if (entity.isCrouching) return
 
         val dir = state.getValue(FACING)
-        val pushBase = if (entity is ItemEntity) 0.65 else 0.45
-        val directionVec = net.minecraft.world.phys.Vec3(dir.step().x.toDouble(), 0.0, dir.step().z.toDouble())
+        val pushBase = if (entity is ItemEntity) ITEM_PUSH_STRENGTH else ENTITY_PUSH_STRENGTH
+        val directionVec = Vec3(dir.step().x.toDouble(), 0.0, dir.step().z.toDouble())
         if (directionVec.lengthSqr() == 0.0) return
 
         val push = directionVec.normalize().scale(pushBase)
         val current = entity.deltaMovement
-        val blended = current.scale(0.15).add(push)
-        val clamped = net.minecraft.world.phys.Vec3(
-            Mth.clamp(blended.x, -1.2, 1.2),
+        val blended = current.scale(MOMENTUM_BLEND).add(push)
+        val clamped = Vec3(
+            Mth.clamp(blended.x, -MAX_SPEED, MAX_SPEED),
             blended.y,
-            Mth.clamp(blended.z, -1.2, 1.2)
+            Mth.clamp(blended.z, -MAX_SPEED, MAX_SPEED)
         )
 
-        entity.deltaMovement = net.minecraft.world.phys.Vec3(clamped.x, current.y, clamped.z)
+        entity.deltaMovement = Vec3(clamped.x, current.y, clamped.z)
         entity.hasImpulse = true
     }
 
     companion object {
         val FACING: DirectionProperty = BlockStateProperties.HORIZONTAL_FACING
         private val SHAPE: VoxelShape = Shapes.box(0.0, 0.0, 0.0, 1.0, 0.125, 1.0)
+        private const val ITEM_PUSH_STRENGTH = 0.65
+        private const val ENTITY_PUSH_STRENGTH = 0.45
+        private const val MOMENTUM_BLEND = 0.15
+        private const val MAX_SPEED = 1.2
     }
 }
 
