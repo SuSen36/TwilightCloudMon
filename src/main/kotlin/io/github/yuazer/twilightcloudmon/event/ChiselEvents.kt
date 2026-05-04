@@ -16,7 +16,7 @@ object ChiselEvents {
                 if (player.isShiftKeyDown) {
                     entity.remove(Entity.RemovalReason.DISCARDED)
                 } else {
-                    ChiselGuiPacket.sendOpenGui(player, entity.id)
+                    ChiselGuiPacket.sendOpenGui(player, entity)
                 }
                 return@register InteractionResult.SUCCESS
             }

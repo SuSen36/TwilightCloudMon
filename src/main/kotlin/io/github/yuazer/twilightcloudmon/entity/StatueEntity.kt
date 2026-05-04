@@ -40,6 +40,10 @@ class StatueEntity(
         }
     }
 
+    var basePosX = 0.0
+    var basePosY = 0.0
+    var basePosZ = 0.0
+
     var pokemonName: String get() = entityData.get(DATA_POKEMON_NAME); set(v) = entityData.set(DATA_POKEMON_NAME, v)
     var size: String get() = entityData.get(DATA_SIZE); set(v) = entityData.set(DATA_SIZE, v)
     var animation: String get() = entityData.get(DATA_ANIMATION); set(v) = entityData.set(DATA_ANIMATION, v)
@@ -69,18 +73,20 @@ class StatueEntity(
         builder.define(DATA_IS_STATIC, false)
     }
 
-    override fun move(moverType: MoverType, movement: Vec3) {
-        if (isStatic) return
-        if (!movable && moverType != MoverType.SELF) return
+    override fun isNoGravity(): Boolean = true
 
-        super.move(moverType, movement)
+    override fun tick() {
+        noPhysics = true
+        setDeltaMovement(Vec3.ZERO)
+        super.tick()
+    }
+
+    override fun move(moverType: MoverType, movement: Vec3) {
+
     }
 
     override fun travel(travelVector: Vec3) {
-        if (isStatic) return
-        if (this.isEffectiveAi || this.isControlledByLocalInstance) {
-            super.travel(travelVector)
-        }
+
     }
 
     override fun getMainArm(): HumanoidArm = HumanoidArm.RIGHT
@@ -102,6 +108,9 @@ class StatueEntity(
         tag.putBoolean("movable", movable)
         tag.putString("gender", gender)
         tag.putBoolean("isStatic", isStatic)
+        tag.putDouble("basePosX", basePosX)
+        tag.putDouble("basePosY", basePosY)
+        tag.putDouble("basePosZ", basePosZ)
     }
 
     override fun readAdditionalSaveData(tag: CompoundTag) {
@@ -118,6 +127,15 @@ class StatueEntity(
         movable = tag.getBoolean("movable")
         gender = tag.getString("gender").ifEmpty { "default" }
         isStatic = tag.getBoolean("isStatic")
+        if (tag.contains("basePosX")) {
+            basePosX = tag.getDouble("basePosX")
+            basePosY = tag.getDouble("basePosY")
+            basePosZ = tag.getDouble("basePosZ")
+        } else {
+            basePosX = x
+            basePosY = y
+            basePosZ = z
+        }
     }
 
     override fun isPickable(): Boolean = true

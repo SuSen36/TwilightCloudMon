@@ -28,7 +28,12 @@ import net.minecraft.world.entity.Entity
 
 @Environment(EnvType.CLIENT)
 class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<StatueEntity>(context) {
-    
+
+    companion object {
+        @JvmStatic
+        var previewMode = false
+    }
+
     private val model = PosablePokemonEntityModel()
     private val renderCache = mutableMapOf<Int, StatueRenderData>()
 
@@ -86,7 +91,8 @@ class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<S
         poseStack.mulPose(Axis.YP.rotationDegrees(180f - entityYaw))
         poseStack.scale(-scale, -scale, scale)
 
-        val vertexConsumer = ItemRenderer.getFoilBufferDirect(buffer, RenderType.entityCutout(texture), false, false)
+        val renderType = if (previewMode) RenderType.entityCutoutNoCull(texture) else RenderType.entityCutout(texture)
+        val vertexConsumer = ItemRenderer.getFoilBufferDirect(buffer, renderType, false, false)
         poser.applyAnimations(entity, state, 0f, 0f, state.animationTicks(entity), 0f, 0f)
         poser.render(model.context, poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 

@@ -34,7 +34,7 @@ class TwilightcloudmonClient : ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ChiselGuiPacket.OpenGuiPayload.TYPE) { payload, _ ->
             Minecraft.getInstance().execute {
-                Minecraft.getInstance().setScreen(ChiselScreen(payload.statueId))
+                Minecraft.getInstance().setScreen(ChiselScreen(payload.statueId, payload.basePosX, payload.basePosY, payload.basePosZ))
             }
         }
     }

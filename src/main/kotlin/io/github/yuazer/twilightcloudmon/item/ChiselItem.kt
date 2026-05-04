@@ -22,7 +22,7 @@ class ChiselItem(properties: Properties) : Item(properties) {
         val player = context.player ?: return InteractionResult.PASS
         if (level.isClientSide) return InteractionResult.SUCCESS
 
-        val placePos = BlockPos.containing(context.clickLocation).relative(context.clickedFace)
+        val placePos = context.clickedPos.relative(context.clickedFace)
 
         val existingStatue = level.getEntitiesOfClass(
             StatueEntity::class.java,
@@ -30,21 +30,23 @@ class ChiselItem(properties: Properties) : Item(properties) {
         ).firstOrNull()
 
         if (existingStatue != null) {
-            ChiselGuiPacket.sendOpenGui(player as ServerPlayer, existingStatue.id)
+            ChiselGuiPacket.sendOpenGui(player as ServerPlayer, existingStatue)
             return InteractionResult.SUCCESS
         }
 
+        val spawnX = placePos.x + BLOCK_CENTER_OFFSET
+        val spawnY = placePos.y.toDouble()
+        val spawnZ = placePos.z + BLOCK_CENTER_OFFSET
+
         val statue = ModEntities.STATUE.create(level) ?: return InteractionResult.FAIL
-        statue.moveTo(
-            placePos.x + BLOCK_CENTER_OFFSET,
-            placePos.y.toDouble(),
-            placePos.z + BLOCK_CENTER_OFFSET,
-            player.yRot,
-            0f
-        )
+        statue.moveTo(spawnX, spawnY, spawnZ, 0f, 0f)
+        statue.basePosX = spawnX
+        statue.basePosY = spawnY
+        statue.basePosZ = spawnZ
+        statue.noPhysics = true
 
         if (level.addFreshEntity(statue)) {
-            ChiselGuiPacket.sendOpenGui(player as ServerPlayer, statue.id)
+            ChiselGuiPacket.sendOpenGui(player as ServerPlayer, statue)
             return InteractionResult.SUCCESS
         }
 
