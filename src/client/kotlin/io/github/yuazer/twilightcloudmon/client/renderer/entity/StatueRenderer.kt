@@ -7,8 +7,8 @@ import com.cobblemon.mod.common.api.scheduling.SchedulingTracker
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableModel
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableState
 import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PosablePokemonEntityModel
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
+import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -152,27 +152,24 @@ class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<S
         props.shiny = signature.material.equals("shiny", true)
         return props.create()
     }
-    
+
     private fun applyMaterialAspects(pokemon: Pokemon, signature: StatueSignature) {
-        val aspects = mutableSetOf<String>()
-        if (!signature.material.equals("none", true)) {
-            aspects.add(signature.material.lowercase())
-        }
-        if (signature.extraMaterial.isNotBlank() && !signature.extraMaterial.equals("none", true)) {
-            aspects.add(signature.extraMaterial.lowercase())
-        }
-        if (aspects.isNotEmpty()) {
-            pokemon.forcedAspects = pokemon.forcedAspects + aspects
-            pokemon.updateAspects()
-        }
+        val aspects = listOf(signature.material, signature.extraMaterial)
+            .map { it.trim().lowercase() }
+            .filter { it.isNotEmpty() && it != "none" }
+            .toSet()
+        if (aspects.isEmpty()) return
+
+        pokemon.forcedAspects = pokemon.forcedAspects + aspects
+        pokemon.updateAspects()
     }
 
     private fun resolveSpecies(rawName: String): com.cobblemon.mod.common.pokemon.Species? {
         val trimmed = rawName.trim()
         if (trimmed.isEmpty()) return null
-        
+
         val speciesRegistry = PokemonSpecies
-        
+
         speciesRegistry.getByName(trimmed)?.let { return it }
 
         return try {
@@ -186,19 +183,16 @@ class StatueRenderer(context: EntityRendererProvider.Context) : EntityRenderer<S
         "male" -> Gender.MALE
         "female" -> Gender.FEMALE
         "genderless" -> Gender.GENDERLESS
-        "default" -> null
         else -> null
     }
 
-    private fun computeScale(size: String): Float {
-        return when (size.lowercase()) {
-            "tiny" -> 0.5f
-            "small" -> 0.75f
-            "normal" -> 1.0f
-            "large" -> 1.5f
-            "huge" -> 2.0f
-            else -> 1.0f
-        }
+    private fun computeScale(size: String): Float = when (size.lowercase()) {
+        "tiny" -> 0.5f
+        "small" -> 0.75f
+        "normal" -> 1.0f
+        "large" -> 1.5f
+        "huge" -> 2.0f
+        else -> 1.0f
     }
 
     private fun prepareRenderContext(

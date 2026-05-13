@@ -8,12 +8,12 @@ import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.phys.Vec3
 
 object ChiselGuiPacket {
 
     private val OPEN_GUI_ID = id("open_chisel_gui")
     private val UPDATE_STATUE_ID = id("update_statue")
+    private const val MAX_TEXT_LENGTH = 128
 
     data class OpenGuiPayload(
         val statueId: Int,
@@ -66,17 +66,17 @@ object ChiselGuiPacket {
             val CODEC: StreamCodec<FriendlyByteBuf, UpdateStatuePayload> = StreamCodec.of(
                 { buf, p ->
                     buf.writeVarInt(p.statueId)
-                    buf.writeUtf(p.pokemonName)
-                    buf.writeUtf(p.size)
-                    buf.writeUtf(p.animation)
+                    buf.writeUtf(p.pokemonName, MAX_TEXT_LENGTH)
+                    buf.writeUtf(p.size, MAX_TEXT_LENGTH)
+                    buf.writeUtf(p.animation, MAX_TEXT_LENGTH)
                     buf.writeBoolean(p.isAnimated)
-                    buf.writeUtf(p.text)
-                    buf.writeUtf(p.material)
-                    buf.writeUtf(p.form)
-                    buf.writeUtf(p.extraMaterial)
-                    buf.writeUtf(p.collisionType)
+                    buf.writeUtf(p.text, MAX_TEXT_LENGTH)
+                    buf.writeUtf(p.material, MAX_TEXT_LENGTH)
+                    buf.writeUtf(p.form, MAX_TEXT_LENGTH)
+                    buf.writeUtf(p.extraMaterial, MAX_TEXT_LENGTH)
+                    buf.writeUtf(p.collisionType, MAX_TEXT_LENGTH)
                     buf.writeBoolean(p.movable)
-                    buf.writeUtf(p.gender)
+                    buf.writeUtf(p.gender, MAX_TEXT_LENGTH)
                     buf.writeBoolean(p.isStatic)
                     buf.writeDouble(p.posX)
                     buf.writeDouble(p.posY)
@@ -86,17 +86,17 @@ object ChiselGuiPacket {
                 { buf ->
                     UpdateStatuePayload(
                         statueId = buf.readVarInt(),
-                        pokemonName = buf.readUtf(),
-                        size = buf.readUtf(),
-                        animation = buf.readUtf(),
+                        pokemonName = buf.readUtf(MAX_TEXT_LENGTH),
+                        size = buf.readUtf(MAX_TEXT_LENGTH),
+                        animation = buf.readUtf(MAX_TEXT_LENGTH),
                         isAnimated = buf.readBoolean(),
-                        text = buf.readUtf(),
-                        material = buf.readUtf(),
-                        form = buf.readUtf(),
-                        extraMaterial = buf.readUtf(),
-                        collisionType = buf.readUtf(),
+                        text = buf.readUtf(MAX_TEXT_LENGTH),
+                        material = buf.readUtf(MAX_TEXT_LENGTH),
+                        form = buf.readUtf(MAX_TEXT_LENGTH),
+                        extraMaterial = buf.readUtf(MAX_TEXT_LENGTH),
+                        collisionType = buf.readUtf(MAX_TEXT_LENGTH),
                         movable = buf.readBoolean(),
-                        gender = buf.readUtf(),
+                        gender = buf.readUtf(MAX_TEXT_LENGTH),
                         isStatic = buf.readBoolean(),
                         posX = buf.readDouble(),
                         posY = buf.readDouble(),
@@ -125,7 +125,7 @@ object ChiselGuiPacket {
             entity.yRotO = rotation
             entity.yHeadRot = rotation
             entity.yBodyRot = rotation
-            entity.setDeltaMovement(Vec3.ZERO)
+            entity.setDeltaMovement(0.0, 0.0, 0.0)
             entity.noPhysics = true
             entity.hasImpulse = true
         }

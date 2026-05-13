@@ -11,6 +11,7 @@ import net.minecraft.world.item.CreativeModeTabs
 import net.minecraft.world.item.Item
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
+import java.nio.file.Path
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.name
 
@@ -39,6 +40,16 @@ object ModItems {
     )
 
     private val PRIORITY_ITEMS = listOf("dna_fire", "eclipsecharter", "up_paper", "ghost_bottle")
+    private val AUTO_REGISTER_COMPARATOR = Comparator<String> { a, b ->
+        val ap = PRIORITY_ITEMS.indexOf(a)
+        val bp = PRIORITY_ITEMS.indexOf(b)
+        when {
+            ap != -1 && bp != -1 -> ap.compareTo(bp)
+            ap != -1 -> -1
+            bp != -1 -> 1
+            else -> a.compareTo(b)
+        }
+    }
     private val MEGA_STONE_NAMES = listOf("flygonite_x", "flygonite_y", "giratinaite")
 
     fun register() {
@@ -101,41 +112,12 @@ object ModItems {
             return
         }
 
-        val allItemNames = mutableListOf<String>()
-        Files.walk(modelsPath).use { stream ->
-            stream.filter { it.isRegularFile() && it.name.endsWith(".json") }
-                .map { file ->
-                    modelsPath.relativize(file).toString()
-                        .replace("\\", "/").removeSuffix(".json")
-                        .removePrefix("custom_items2/")
-                }
-                .forEach { name ->
-                    when {
-                        "_bow_" in name -> return@forEach
-                        name in BLACKLISTED_ITEMS -> return@forEach
-                        isMegaStoneName(name) || name.endsWith("stone") -> return@forEach
-                        else -> allItemNames.add(name)
-                    }
-                }
-        }
-
-        val sorted = allItemNames.sortedWith(Comparator { a, b ->
-            val ap = PRIORITY_ITEMS.indexOf(a)
-            val bp = PRIORITY_ITEMS.indexOf(b)
-            when {
-                ap != -1 && bp != -1 -> ap.compareTo(bp)
-                ap != -1 -> -1
-                bp != -1 -> 1
-                else -> a.compareTo(b)
-            }
-        })
-
-        sorted.forEach { name ->
+        discoverAutoRegisterItemNames(modelsPath).forEach { name ->
             try {
                 val rid = id(name)
                 if (BuiltInRegistries.ITEM.containsKey(rid)) return@forEach
 
-                Registry.register(BuiltInRegistries.ITEM, rid, Item(Item.Properties()))
+                RegistryHelper.registerItem(name, Item(Item.Properties()))
                 autoRegisteredIds += rid
                 LOGGER.info("Auto-registered item: {}", rid)
             } catch (e: Exception) {
@@ -143,6 +125,27 @@ object ModItems {
             }
         }
     }
+
+    private fun discoverAutoRegisterItemNames(modelsPath: Path): List<String> =
+        Files.walk(modelsPath).use { stream ->
+            stream.filter { it.isRegularFile() && it.name.endsWith(".json") }
+                .map { file -> normalizeItemModelPath(modelsPath, file) }
+                .filter { shouldAutoRegister(it) }
+                .sorted(AUTO_REGISTER_COMPARATOR)
+                .toList()
+        }
+
+    private fun normalizeItemModelPath(modelsPath: Path, file: Path): String =
+        modelsPath.relativize(file).toString()
+            .replace("\\", "/")
+            .removeSuffix(".json")
+            .removePrefix("custom_items2/")
+
+    private fun shouldAutoRegister(name: String): Boolean =
+        "_bow_" !in name &&
+                name !in BLACKLISTED_ITEMS &&
+                !isMegaStoneName(name) &&
+                !name.endsWith("stone")
 
     private fun isMegaStoneName(name: String) =
         name.endsWith("ite") || name.endsWith("ite_x") || name.endsWith("ite_y")

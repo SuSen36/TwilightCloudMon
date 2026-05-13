@@ -71,21 +71,10 @@ class ChiselScreen(
     private var offsetZ = 0.0
     private var rotOffset = 0f
 
-    private var savedPokemonName = ""
-    private var savedSize = ""
-    private var savedMaterial = ""
-    private var savedForm = ""
-    private var savedExtraMaterial = ""
-    private var savedGender = ""
-    private var savedAnimation = ""
-    private var savedAnimated = true
     private var basePosX = 0.0
     private var basePosY = 0.0
     private var basePosZ = 0.0
-    private var savedOffsetX = 0.0
-    private var savedOffsetY = 0.0
-    private var savedOffsetZ = 0.0
-    private var savedRotOffset = 0f
+    private lateinit var savedSnapshot: StatueSnapshot
 
     private val rightW get() = CTRL_W
     private val guiW get() = PREVIEW_SIZE + PAD * 3 + rightW
@@ -115,19 +104,7 @@ class ChiselScreen(
                 offsetY = entity.y - basePosY
                 offsetZ = entity.z - basePosZ
                 rotOffset = entity.yRot
-                savedOffsetX = offsetX
-                savedOffsetY = offsetY
-                savedOffsetZ = offsetZ
-                savedRotOffset = rotOffset
-
-                savedPokemonName = entity.pokemonName
-                savedSize = entity.size
-                savedMaterial = entity.material
-                savedForm = entity.form
-                savedExtraMaterial = entity.extraMaterial
-                savedGender = entity.gender
-                savedAnimation = entity.animation
-                savedAnimated = entity.isAnimated
+                savedSnapshot = StatueSnapshot.from(entity)
 
                 entity.noPhysics = true
                 entity.setDeltaMovement(0.0, 0.0, 0.0)
@@ -244,28 +221,13 @@ class ChiselScreen(
     private fun rebuild() = buildControls()
 
     private fun syncEntityTransform() {
-        statue?.let { s ->
-            val wx = basePosX + offsetX
-            val wy = basePosY + offsetY
-            val wz = basePosZ + offsetZ
-            val wr = rotOffset
-            s.lerpTo(wx, wy, wz, wr, s.xRot, 0)
-            s.setPos(wx, wy, wz)
-            s.xo = wx
-            s.yo = wy
-            s.zo = wz
-            s.yRot = wr
-            s.yRotO = wr
-            s.yHeadRot = wr
-            s.yBodyRot = wr
-            s.setDeltaMovement(0.0, 0.0, 0.0)
-            s.noPhysics = true
-        }
+        statue?.let { applyTransform(it, currentTransform()) }
     }
 
     private fun applyPreviewToEntity() {
         statue?.let { s ->
             s.pokemonName = pokemonNameField.value
+            s.text = textField.value
             s.form = formField.value
             s.animation = animationField.value
             s.size = currentSize
@@ -273,37 +235,23 @@ class ChiselScreen(
             s.extraMaterial = currentExtraMaterial
             s.gender = currentGender
             s.isAnimated = isAnimated
+            s.collisionType = currentCollision
+            s.movable = isMovable
+            s.isStatic = isStatic
         }
     }
 
     private fun restoreEntity() {
+        if (!::savedSnapshot.isInitialized) return
         statue?.let { s ->
-            s.pokemonName = savedPokemonName
-            s.form = savedForm
-            s.animation = savedAnimation
-            s.size = savedSize
-            s.material = savedMaterial
-            s.extraMaterial = savedExtraMaterial
-            s.gender = savedGender
-            s.isAnimated = savedAnimated
-            val origX = basePosX + savedOffsetX
-            val origY = basePosY + savedOffsetY
-            val origZ = basePosZ + savedOffsetZ
-            s.moveTo(origX, origY, origZ, savedRotOffset, s.xRot)
-            s.yRot = savedRotOffset
-            s.yRotO = savedRotOffset
-            s.noPhysics = true
-            s.setDeltaMovement(0.0, 0.0, 0.0)
+            savedSnapshot.applyTo(s, ::applyTransform)
         }
     }
 
     private fun saveAndClose() {
         saving = true
 
-        val wx = basePosX + offsetX
-        val wy = basePosY + offsetY
-        val wz = basePosZ + offsetZ
-        val wr = rotOffset
+        val transform = currentTransform()
 
         ClientPlayNetworking.send(
             ChiselGuiPacket.UpdateStatuePayload(
@@ -320,35 +268,16 @@ class ChiselScreen(
                 movable = isMovable,
                 gender = currentGender,
                 isStatic = isStatic,
-                posX = wx,
-                posY = wy,
-                posZ = wz,
-                rotation = wr
+                posX = transform.x,
+                posY = transform.y,
+                posZ = transform.z,
+                rotation = transform.rotation
             )
         )
 
         statue?.let { s ->
-            s.pokemonName = pokemonNameField.value
-            s.text = textField.value
-            s.animation = animationField.value
-            s.isAnimated = isAnimated
-            s.size = currentSize
-            s.material = currentMaterial
-            s.form = formField.value
-            s.extraMaterial = currentExtraMaterial
-            s.collisionType = currentCollision
-            s.movable = isMovable
-            s.gender = currentGender
-            s.isStatic = isStatic
-            s.lerpTo(wx, wy, wz, wr, s.xRot, 0)
-            s.setPos(wx, wy, wz)
-            s.xo = wx
-            s.yo = wy
-            s.zo = wz
-            s.yRot = wr
-            s.yRotO = wr
-            s.noPhysics = true
-            s.setDeltaMovement(0.0, 0.0, 0.0)
+            applyPreviewToEntity()
+            applyTransform(s, transform)
         }
 
         minecraft?.setScreen(null)
@@ -407,7 +336,7 @@ class ChiselScreen(
 
         applyPreviewToEntity()
 
-        // Zero entity rotation so animation system doesn't double-rotate
+        // Render the model upright in the GUI while preserving the in-world rotation.
         val prevYaw = s.yRot
         val prevYawO = s.yRotO
         val prevHead = s.yHeadRot
@@ -491,5 +420,84 @@ class ChiselScreen(
             return true
         }
         return super.keyPressed(keyCode, scanCode, modifiers)
+    }
+
+    private fun currentTransform() =
+        StatueTransform(
+            x = basePosX + offsetX,
+            y = basePosY + offsetY,
+            z = basePosZ + offsetZ,
+            rotation = rotOffset
+        )
+
+    private fun applyTransform(entity: StatueEntity, transform: StatueTransform) {
+        entity.lerpTo(transform.x, transform.y, transform.z, transform.rotation, entity.xRot, 0)
+        entity.setPos(transform.x, transform.y, transform.z)
+        entity.xo = transform.x
+        entity.yo = transform.y
+        entity.zo = transform.z
+        entity.yRot = transform.rotation
+        entity.yRotO = transform.rotation
+        entity.yHeadRot = transform.rotation
+        entity.yBodyRot = transform.rotation
+        entity.setDeltaMovement(0.0, 0.0, 0.0)
+        entity.noPhysics = true
+    }
+
+    private data class StatueTransform(
+        val x: Double,
+        val y: Double,
+        val z: Double,
+        val rotation: Float
+    )
+
+    private data class StatueSnapshot(
+        val pokemonName: String,
+        val size: String,
+        val material: String,
+        val form: String,
+        val extraMaterial: String,
+        val gender: String,
+        val animation: String,
+        val text: String,
+        val collisionType: String,
+        val movable: Boolean,
+        val isStatic: Boolean,
+        val isAnimated: Boolean,
+        val transform: StatueTransform
+    ) {
+        fun applyTo(entity: StatueEntity, applyTransform: (StatueEntity, StatueTransform) -> Unit) {
+            entity.pokemonName = pokemonName
+            entity.size = size
+            entity.material = material
+            entity.form = form
+            entity.extraMaterial = extraMaterial
+            entity.gender = gender
+            entity.animation = animation
+            entity.text = text
+            entity.collisionType = collisionType
+            entity.movable = movable
+            entity.isStatic = isStatic
+            entity.isAnimated = isAnimated
+            applyTransform(entity, transform)
+        }
+
+        companion object {
+            fun from(entity: StatueEntity) = StatueSnapshot(
+                pokemonName = entity.pokemonName,
+                size = entity.size,
+                material = entity.material,
+                form = entity.form,
+                extraMaterial = entity.extraMaterial,
+                gender = entity.gender,
+                animation = entity.animation,
+                text = entity.text,
+                collisionType = entity.collisionType,
+                movable = entity.movable,
+                isStatic = entity.isStatic,
+                isAnimated = entity.isAnimated,
+                transform = StatueTransform(entity.x, entity.y, entity.z, entity.yRot)
+            )
+        }
     }
 }
