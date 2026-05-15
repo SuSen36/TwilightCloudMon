@@ -1,9 +1,9 @@
 package io.github.yuazer.twilightcloudmon.registry
 
 import com.cobblemon.mod.common.pokemon.helditem.CobblemonHeldItemManager
+import com.github.yajatkaul.mega_showdown.MegaShowdown
 import io.github.yuazer.twilightcloudmon.Twilightcloudmon
 import io.github.yuazer.twilightcloudmon.item.MegaStoneItem
-import io.github.yuazer.twilightcloudmon.registry.RegistryHelper.id
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
@@ -34,7 +34,7 @@ object MegaShowdownIntegration {
     fun createMegaStoneItem(name: String): Item {
         val properties = Item.Properties()
         registryTypeComponent?.let { properties.component(it, "mega") }
-        resourceLocationComponent?.let { properties.component(it, id(name)) }
+        resourceLocationComponent?.let { properties.component(it, megaShowdownId(name)) }
         return MegaStoneItem(properties.stacksTo(1))
     }
 
@@ -51,4 +51,7 @@ object MegaShowdownIntegration {
         LOGGER.warn("Failed to get $fieldName via reflection", e)
         null
     }
+
+    private fun megaShowdownId(path: String): ResourceLocation =
+        ResourceLocation.fromNamespaceAndPath(MegaShowdown.MOD_ID, path)
 }
