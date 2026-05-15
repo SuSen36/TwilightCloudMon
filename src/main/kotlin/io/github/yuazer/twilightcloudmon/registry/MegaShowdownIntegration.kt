@@ -15,6 +15,7 @@ object MegaShowdownIntegration {
     private val LOGGER = LoggerFactory.getLogger("${Twilightcloudmon.MOD_ID}/MegaShowdownIntegration")
     private const val MSD_COMPONENTS_CLASS = "com.github.yajatkaul.mega_showdown.components.MegaShowdownDataComponents"
 
+    // Mega Showdown keeps these component suppliers internal, so reflection is needed for compatible item metadata.
     private val msdComponentsClass by lazy {
         runCatching { Class.forName(MSD_COMPONENTS_CLASS) }
             .onFailure { LOGGER.warn("MegaShowdownDataComponents class not found", it) }
@@ -33,6 +34,7 @@ object MegaShowdownIntegration {
 
     fun createMegaStoneItem(name: String): Item {
         val properties = Item.Properties()
+        // These components let Mega Showdown recognize this mod's stones in the same path as its built-in items.
         registryTypeComponent?.let { properties.component(it, "mega") }
         resourceLocationComponent?.let { properties.component(it, megaShowdownId(name)) }
         return MegaStoneItem(properties.stacksTo(1))

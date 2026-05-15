@@ -75,6 +75,10 @@
 
     "container.twilightcloudmon.firework_chest": "烟花箱子",
 
+    "tooltip.twilightcloudmon.flygonite_x.tooltip": "可让沙漠蜻蜓进行 X 形态超级进化的神秘石头。",
+    "tooltip.twilightcloudmon.flygonite_y.tooltip": "可让沙漠蜻蜓进行 Y 形态超级进化的神秘石头。",
+    "tooltip.twilightcloudmon.giratinaite.tooltip": "可让骑拉帝纳进行超级进化的神秘石头。",
+
     "gui.twilightcloudmon.chisel": "宝可梦雕塑工具",
     "gui.twilightcloudmon.chisel.save": "保存并关闭",
     "gui.twilightcloudmon.chisel.pokemon_name": "宝可梦名称",

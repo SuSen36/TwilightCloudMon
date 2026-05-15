@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item
 
 class MegaStoneItem(properties: Properties) : MegaStone(properties), ShowdownIdentifiable {
     override fun showdownId(): String {
+        // Showdown held-item ids are lowercase and omit punctuation, e.g. flygonite_x -> flygonitex.
         return BuiltInRegistries.ITEM.getKey(this).path.lowercase().replace(Regex("[^a-z0-9]+"), "")
     }
 }
