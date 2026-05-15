@@ -75,6 +75,10 @@
 
     "container.twilightcloudmon.firework_chest": "Firework Chest",
 
+    "tooltip.twilightcloudmon.flygonite_x.tooltip": "A mysterious stone that enables Flygon to Mega Evolve into its X form.",
+    "tooltip.twilightcloudmon.flygonite_y.tooltip": "A mysterious stone that enables Flygon to Mega Evolve into its Y form.",
+    "tooltip.twilightcloudmon.giratinaite.tooltip": "A mysterious stone that enables Giratina to Mega Evolve.",
+
     "gui.twilightcloudmon.chisel": "Pokémon Chisel",
     "gui.twilightcloudmon.chisel.save": "Save and Close",
     "gui.twilightcloudmon.chisel.pokemon_name": "Pokémon Name",

@@ -92,6 +92,7 @@ object ModItemGroups {
                     addByTag(TAG_WEAPONS, output)
 
                     addMatchingModItems(added) { name ->
+                        // Some evolution stones contain weapon-like words in their ids, so keep them out of the weapon tab.
                         name !in WEAPON_BLACKLIST && isWeaponName(name)
                     }
                 }
@@ -213,6 +214,7 @@ object ModItemGroups {
         WEAPON_SUFFIXES.any { name.endsWith(it) } || WEAPON_KEYWORDS.any { it in name }
 
     private fun isEvolutionItem(name: String) =
+        // Mega Showdown ids use both `-ite` and split forms like flygonite_x/y.
         name.endsWith("_stone") || name.endsWith("stone") ||
                 name.endsWith("ite") || name.endsWith("ite_x") || name.endsWith("ite_y")
 

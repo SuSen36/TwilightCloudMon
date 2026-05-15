@@ -84,6 +84,7 @@ object ModItems {
         if (BuiltInRegistries.ITEM.containsKey(rid)) return
 
         val isMSD = FabricLoader.getInstance().isModLoaded("mega_showdown")
+        // When Mega Showdown is present, register as its MegaStone subclass so its tooltip and battle checks apply.
         val item = if (isMSD) MegaShowdownIntegration.createMegaStoneItem(name)
         else Item(Item.Properties().stacksTo(1))
 
@@ -144,6 +145,7 @@ object ModItems {
     private fun shouldAutoRegister(name: String): Boolean =
         "_bow_" !in name &&
                 name !in BLACKLISTED_ITEMS &&
+                // Mega stones are registered explicitly to attach Mega Showdown components and held-item remaps.
                 !isMegaStoneName(name) &&
                 !name.endsWith("stone")
 

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MegaShowdownLateInitMixin {
     @Inject(method = "init", at = @At("TAIL"))
     private static void twilight$afterMSDInit(CallbackInfo ci) {
+        // Mega Showdown registers its own items during init, so inject after it to avoid id collisions.
         ModItems.registerMegaStonesAfterMSD();
     }
 }
-
