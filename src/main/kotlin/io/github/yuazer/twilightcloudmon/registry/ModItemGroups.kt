@@ -91,8 +91,8 @@ object ModItemGroups {
 
                     addByTag(TAG_WEAPONS, output)
 
-                    RegistryHelper.forEachModItem { name, item ->
-                        if (name !in WEAPON_BLACKLIST && isWeaponName(name)) added += item
+                    addMatchingModItems(added) { name ->
+                        name !in WEAPON_BLACKLIST && isWeaponName(name)
                     }
                 }
         )
@@ -105,9 +105,7 @@ object ModItemGroups {
                 .displayItems { _, output ->
                     val added = DedupOutput(output)
                     addByTag(TAG_ITEMS, output)
-                    RegistryHelper.forEachModItem { name, item ->
-                        if (name in CUSTOM_ITEMS_WHITELIST) added += item
-                    }
+                    addMatchingModItems(added) { it in CUSTOM_ITEMS_WHITELIST }
                 }
         )
 
@@ -120,13 +118,8 @@ object ModItemGroups {
                     val added = DedupOutput(output)
                     addByTag(TAG_ITEMS1, output)
 
-                    RegistryHelper.forEachModItem { name, item ->
-                        if (name in CUSTOM_ITEMS1_EXCLUDE) return@forEachModItem
-                        if ((isEvolutionItem(name) || name == "zenith_edge" || name == "zenith_ward") && name != "anti_constant_energy") {
-                            added += item
-                        } else if (!isArchaeItem(name) && !isWeaponName(name) && name != "anti_constant_energy" && name != "chisel") {
-                            added += item
-                        }
+                    addMatchingModItems(added) { name ->
+                        name !in CUSTOM_ITEMS1_EXCLUDE && shouldShowInCustomItems1(name)
                     }
                 }
         )
@@ -140,10 +133,8 @@ object ModItemGroups {
                     val added = DedupOutput(output)
                     BuiltInRegistries.ITEM.getOptional(id("dna_fire")).ifPresent { added += it }
                     addByTag(TAG_ITEMS2, output)
-                    RegistryHelper.forEachModItem { name, item ->
-                        if (isArchaeItem(name) && name != "anti_constant_energy" && name != "dna_fire") {
-                            added += item
-                        }
+                    addMatchingModItems(added) { name ->
+                        isArchaeItem(name) && name != "anti_constant_energy" && name != "dna_fire"
                     }
                 }
         )
@@ -155,9 +146,7 @@ object ModItemGroups {
                 .icon(iconSupplier(listOf("archaic_libram"), Items.ENCHANTED_BOOK))
                 .displayItems { _, output ->
                     val added = DedupOutput(output)
-                    RegistryHelper.forEachModItem { name, item ->
-                        if (name == "archaic_libram" || name == "passkey") added += item
-                    }
+                    addMatchingModItems(added) { it == "archaic_libram" || it == "passkey" }
                 }
         )
 
@@ -205,6 +194,20 @@ object ModItemGroups {
             named.forEach { holder -> output.accept(holder.value()) }
         }
     }
+
+    private inline fun addMatchingModItems(
+        added: DedupOutput,
+        predicate: (name: String) -> Boolean
+    ) {
+        RegistryHelper.forEachModItem { name, item ->
+            if (predicate(name)) added += item
+        }
+    }
+
+    private fun shouldShowInCustomItems1(name: String): Boolean =
+        ((isEvolutionItem(name) || name == "zenith_edge" || name == "zenith_ward") &&
+                name != "anti_constant_energy") ||
+                (!isArchaeItem(name) && !isWeaponName(name) && name != "anti_constant_energy" && name != "chisel")
 
     private fun isWeaponName(name: String) =
         WEAPON_SUFFIXES.any { name.endsWith(it) } || WEAPON_KEYWORDS.any { it in name }

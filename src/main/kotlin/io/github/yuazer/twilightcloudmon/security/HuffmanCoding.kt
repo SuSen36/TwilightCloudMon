@@ -12,10 +12,7 @@ class HuffmanCodingWithEmbeddedTree {
             throw IllegalArgumentException("Text cannot be empty")
         }
 
-        val frequencyMap = mutableMapOf<Char, Int>()
-        for (c in text) {
-            frequencyMap[c] = frequencyMap.getOrDefault(c, 0) + 1
-        }
+        val frequencyMap = text.groupingBy { it }.eachCount()
 
         val priorityQueue = PriorityQueue<HuffmanNode>()
         for ((char, freq) in frequencyMap) {
@@ -37,7 +34,7 @@ class HuffmanCodingWithEmbeddedTree {
     private fun buildCodeTable(node: HuffmanNode?, code: String) {
         if (node == null) return
         if (node.isLeaf()) {
-            huffmanCodes!![node.data!!] = code
+            huffmanCodes!![node.data!!] = code.ifEmpty { "0" }
             return
         }
         buildCodeTable(node.left, code + "0")
@@ -124,7 +121,8 @@ class HuffmanCodingWithEmbeddedTree {
             val frequency = numBuilder.toString().toInt()
 
             return HuffmanNode(data, frequency)
-        } else if (type == 'B') {
+        }
+        if (type == 'B') {
             val numBuilder = StringBuilder()
             var charC: Int
             while (reader.read().also { charC = it } != -1 && charC.toChar() != ',') {
@@ -135,9 +133,8 @@ class HuffmanCodingWithEmbeddedTree {
             val left = deserializeTreeFromString(reader)
             val right = deserializeTreeFromString(reader)
             return HuffmanNode(frequency, left, right)
-        } else {
-            throw IllegalArgumentException("Invalid node type: $type")
         }
+        throw IllegalArgumentException("Invalid node type: $type")
     }
 
     fun decodeWithEmbeddedTree(encodedTextWithTree: String): String {
@@ -159,24 +156,27 @@ class HuffmanCodingWithEmbeddedTree {
     }
 
     private fun encode(text: String): String {
-        if (huffmanCodes == null || huffmanCodes!!.isEmpty()) {
-            throw IllegalStateException("Huffman codes not initialized")
-        }
+        val codes = huffmanCodes?.takeIf { it.isNotEmpty() }
+            ?: throw IllegalStateException("Huffman codes not initialized")
 
         val encodedText = StringBuilder()
         for (c in text) {
-            encodedText.append(huffmanCodes!![c])
+            encodedText.append(codes[c] ?: throw IllegalArgumentException("Character not present in Huffman tree: $c"))
         }
         return encodedText.toString()
     }
 
     private fun decode(encodedText: String): String {
-        if (root == null) {
-            throw IllegalStateException("Huffman tree not initialized")
+        val treeRoot = root ?: throw IllegalStateException("Huffman tree not initialized")
+        if (treeRoot.isLeaf()) {
+            require(encodedText.all { it == '0' }) { "Invalid encoded text" }
+            return buildString {
+                repeat(encodedText.length) { append(treeRoot.data) }
+            }
         }
 
         val decodedText = StringBuilder()
-        var current = root
+        var current: HuffmanNode? = treeRoot
 
         for (bit in encodedText) {
             current = if (bit == '0') {
@@ -187,11 +187,11 @@ class HuffmanCodingWithEmbeddedTree {
 
             if (current!!.isLeaf()) {
                 decodedText.append(current.data)
-                current = root
+                current = treeRoot
             }
         }
 
-        if (current != root) {
+        if (current != treeRoot) {
             throw IllegalArgumentException("Invalid encoded text")
         }
 
@@ -213,4 +213,3 @@ class HuffmanCodingWithEmbeddedTree {
         }
     }
 }
-
