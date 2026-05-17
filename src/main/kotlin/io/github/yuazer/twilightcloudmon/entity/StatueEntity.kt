@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -74,6 +75,8 @@ class StatueEntity(
     }
 
     override fun isNoGravity(): Boolean = true
+
+    override fun hurt(source: DamageSource, amount: Float): Boolean = false
 
     override fun tick() {
         noPhysics = true
