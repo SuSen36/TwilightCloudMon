@@ -2,7 +2,7 @@
   name: "giratinaite",
   spritenum: 487,
   megaStone: "Giratina-Mega",
-  megaEvolves: ["Giratina"],
+  megaEvolves: "Giratina",
   itemUser: ["Giratina"],
   onTakeItem(item, source) {
     if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;

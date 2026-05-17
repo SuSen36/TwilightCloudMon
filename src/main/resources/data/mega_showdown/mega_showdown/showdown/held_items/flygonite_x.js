@@ -2,7 +2,7 @@
   name: "flygonitex",
   spritenum: 330,
   megaStone: "Flygon-Mega-X",
-  megaEvolves: ["Flygon"],
+  megaEvolves: "Flygon",
   itemUser: ["Flygon"],
   onTakeItem(item, source) {
     if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
