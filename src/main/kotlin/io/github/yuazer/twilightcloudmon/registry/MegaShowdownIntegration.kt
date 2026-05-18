@@ -32,11 +32,11 @@ object MegaShowdownIntegration {
         getComponentField<ResourceLocation>("RESOURCE_LOCATION_COMPONENT")
     }
 
-    fun createMegaStoneItem(name: String): Item {
+    fun createMegaStoneItem(showdownName: String): Item {
         val properties = Item.Properties()
         // These components let Mega Showdown recognize this mod's stones in the same path as its built-in items.
         registryTypeComponent?.let { properties.component(it, "mega") }
-        resourceLocationComponent?.let { properties.component(it, megaShowdownId(name)) }
+        resourceLocationComponent?.let { properties.component(it, megaShowdownId(showdownName)) }
         return MegaStoneItem(properties.stacksTo(1))
     }
 
@@ -54,6 +54,6 @@ object MegaShowdownIntegration {
         null
     }
 
-    private fun megaShowdownId(path: String): ResourceLocation =
-        ResourceLocation.fromNamespaceAndPath(MegaShowdown.MOD_ID, path)
+    private fun megaShowdownId(showdownName: String): ResourceLocation =
+        ResourceLocation.fromNamespaceAndPath(MegaShowdown.MOD_ID, showdownName)
 }
