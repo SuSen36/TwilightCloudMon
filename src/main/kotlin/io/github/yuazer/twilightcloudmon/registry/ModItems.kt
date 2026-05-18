@@ -50,11 +50,17 @@ object ModItems {
             else -> a.compareTo(b)
         }
     }
-    private val MEGA_STONE_NAMES = listOf("flygonite_x", "flygonite_y", "giratinaite")
+    private data class MegaStoneRegistration(val itemName: String, val showdownName: String = itemName)
+
+    private val MEGA_STONES = listOf(
+        MegaStoneRegistration("flygonite_x", "flygonitex"),
+        MegaStoneRegistration("flygonite_y", "flygonitey"),
+        MegaStoneRegistration("giratinaite")
+    )
 
     fun register() {
         if (!FabricLoader.getInstance().isModLoaded("mega_showdown")) {
-            MEGA_STONE_NAMES.forEach(::registerMegaStone)
+            MEGA_STONES.forEach(::registerMegaStone)
         }
 
         autoRegisterFromModelFiles()
@@ -72,27 +78,27 @@ object ModItems {
     @JvmStatic
     fun registerMegaStonesAfterMSD() {
         try {
-            MEGA_STONE_NAMES.forEach(::registerMegaStone)
+            MEGA_STONES.forEach(::registerMegaStone)
             LOGGER.info("Registered mega stones after Mega Showdown init")
         } catch (e: Exception) {
             LOGGER.error("Failed to register mega stones after MSD init", e)
         }
     }
 
-    private fun registerMegaStone(name: String) {
-        val rid = id(name)
+    private fun registerMegaStone(stone: MegaStoneRegistration) {
+        val rid = id(stone.itemName)
         if (BuiltInRegistries.ITEM.containsKey(rid)) return
 
         val isMSD = FabricLoader.getInstance().isModLoaded("mega_showdown")
         // When Mega Showdown is present, register as its MegaStone subclass so its tooltip and battle checks apply.
-        val item = if (isMSD) MegaShowdownIntegration.createMegaStoneItem(name)
+        val item = if (isMSD) MegaShowdownIntegration.createMegaStoneItem(stone.showdownName)
         else Item(Item.Properties().stacksTo(1))
 
         val registered = Registry.register(BuiltInRegistries.ITEM, rid, item)
         autoRegisteredIds += rid
 
         if (isMSD) {
-            MegaShowdownIntegration.registerRemaps(registered, name.lowercase().replace("_", ""))
+            MegaShowdownIntegration.registerRemaps(registered, stone.showdownName)
         }
     }
 
