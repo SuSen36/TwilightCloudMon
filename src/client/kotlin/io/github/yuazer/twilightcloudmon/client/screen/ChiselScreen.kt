@@ -302,6 +302,7 @@ class ChiselScreen(
 
         graphics.fill(pLeft - 1, pTop - 1, pRight + 1, pBottom + 1, WHITE_BORDER)
         graphics.fill(pLeft, pTop, pRight, pBottom, BLACK_BG)
+        graphics.flush()
 
         graphics.enableScissor(pLeft, pTop, pRight, pBottom)
         renderPreview(graphics, pLeft, pTop, pRight, pBottom)
